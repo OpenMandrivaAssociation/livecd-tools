@@ -2,7 +2,7 @@
 
 Summary: Tools for building live CD's
 Name: livecd-tools
-Version: 019
+Version: 021
 Release: %mkrel 1
 License: GPLv2
 Group: System/Base
@@ -19,6 +19,7 @@ Requires: squashfs-tools
 Requires: pykickstart >= 0.96
 Requires: dosfstools >= 2.11-8
 Requires: isomd5sum
+Requires: python-urlgrabber
 %ifarch %{ix86} x86_64
 Requires: syslinux
 %endif

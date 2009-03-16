@@ -2,7 +2,7 @@
 
 Summary: Tools for building live CD's
 Name: livecd-tools
-Version: 021
+Version: 022
 Release: %mkrel 1
 License: GPLv2
 Group: System/Base

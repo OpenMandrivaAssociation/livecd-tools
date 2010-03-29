@@ -1,5 +1,3 @@
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "import distutils.sysconfig as d; print d.get_python_lib()")}
-
 %define debug_package %{nil}
 
 Summary: Tools for building live CDs
@@ -81,7 +79,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n python-imgcreate
 %defattr(-,root,root,-)
 %doc API
-%dir %{python_sitelib}/imgcreate
-%{python_sitelib}/imgcreate/*.py
-%{python_sitelib}/imgcreate/*.pyo
-%{python_sitelib}/imgcreate/*.pyc
+%dir %{python_platsitedir}/imgcreate
+%{python_platsitedir}/imgcreate/*.py
+%{python_platsitedir}/imgcreate/*.pyo
+%{python_platsitedir}/imgcreate/*.pyc

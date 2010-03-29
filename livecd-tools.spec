@@ -3,7 +3,7 @@
 Summary: Tools for building live CDs
 Name: livecd-tools
 Version: 031
-Release: %mkrel 2
+Release: %mkrel 3
 License: GPLv2
 Group: System/Base
 URL: http://git.fedoraproject.org/?p=hosted/livecd
@@ -79,7 +79,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n python-imgcreate
 %defattr(-,root,root,-)
 %doc API
-%dir %{python_platsitedir}/imgcreate
-%{python_platsitedir}/imgcreate/*.py
-%{python_platsitedir}/imgcreate/*.pyo
-%{python_platsitedir}/imgcreate/*.pyc
+%dir %{py_platsitedir}/imgcreate
+%{py_platsitedir}/imgcreate/*.py
+%{py_platsitedir}/imgcreate/*.pyo
+%{py_platsitedir}/imgcreate/*.pyc

@@ -3,7 +3,7 @@
 Summary: Tools for building live CDs
 Name: livecd-tools
 Version: 031
-Release: %mkrel 4
+Release: %mkrel 5
 License: GPLv2
 Group: System/Base
 URL: http://git.fedoraproject.org/?p=hosted/livecd
@@ -39,7 +39,7 @@ Requires: yum >= 3.2.18
 Requires: squashfs-tools
 Requires: pykickstart >= 0.96
 Requires: dosfstools >= 2.11-8
-Requires: system-config-keyboard >= 1.3.0
+#Requires: system-config-keyboard >= 1.3.0
 Requires: python-urlgrabber
 Requires: dbus-python
 

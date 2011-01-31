@@ -3,9 +3,10 @@
 Summary: Tools for building live CDs
 Name: livecd-tools
 Version: 031
-Release: %mkrel 7
+Release: %mkrel 34
 License: GPLv2
 Group: System/Base
+Buildarch: noarch
 URL: http://git.fedoraproject.org/?p=hosted/livecd
 Source0: %{name}-%{version}.tar.bz2
 Patch100: fix-libdir-in-python.patch
@@ -13,6 +14,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires: python-imgcreate = %{version}-%{release}
 Requires: mkisofs
 Requires: isomd5sum
+Requires: parted
 %ifarch %{ix86} x86_64
 Requires: syslinux
 %endif
@@ -20,8 +22,21 @@ Requires: syslinux
 Requires: yaboot
 %endif
 BuildRequires: python
-BuildRequires: /usr/bin/pod2man
+BuildRequires: perl
 Patch0: 0001-Disable-iswmd-on-live-images-for-now.patch
+Patch10: livecd-tools-031-menu-config.patch
+Patch11: livecd-tools-031-dracut.patch
+Patch12: livecd-tools-031-not-use-rhpl-python.patch
+Patch13: livecd-tools-031-use-urpmi.patch
+Patch14: livecd-tools-031-yum-not-needed.patch
+Patch15: livecd-tools-031-parted-path.patch 
+Patch16: livecd-tools-031-yum-option.patch
+Patch17: livecd-tools-031-without-language-config.patch
+Patch18: livecd-tools-031-mksquashfs-lzma.patch
+Patch19: livecd-tools-031-iso-to-disk-oem.patch
+Patch20: livecd-tools-031-post-packages.patch
+Patch21: livecd-tools-031-lazy-umount.patch
+Patch22: livecd-tools-031-timeout-before-losetup-d.patch
 
 
 %description 
@@ -37,7 +52,8 @@ Requires: coreutils
 Requires: e2fsprogs
 Requires: yum >= 3.2.18
 Requires: squashfs-tools
-Requires: python-kickstart >= 0.96
+#Requires: python-kickstart >= 0.96
+Requires: pykickstart >= 1.77-3
 Requires: dosfstools >= 2.11-8
 #Requires: system-config-keyboard >= 1.3.0
 Requires: python-urlgrabber
@@ -48,11 +64,29 @@ Conflicts: livecd-tools < 0.31
 Python modules that can be used for building images for things
 like live image or appliances.
 
+%package -n livecd-iso-to-disk
+Summary: Script for copy iso to disk
+
+%description -n livecd-iso-to-disk
+Convert a live CD iso so that it's bootable off of a USB stick
 
 %prep
 %setup -q
-%patch100 -p0
+#%patch100 -p0
 %patch0 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+#%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1
 
 %build
 make
@@ -72,14 +106,16 @@ rm -rf $RPM_BUILD_ROOT
 %doc config/livecd-fedora-minimal.ks
 %{_mandir}/man*/*
 %{_bindir}/livecd-creator
-%{_bindir}/livecd-iso-to-disk
 %{_bindir}/livecd-iso-to-pxeboot
 %{_bindir}/image-creator
 
 %files -n python-imgcreate
 %defattr(-,root,root,-)
 %doc API
-%dir %{py_platsitedir}/imgcreate
-%{py_platsitedir}/imgcreate/*.py
-%{py_platsitedir}/imgcreate/*.pyo
-%{py_platsitedir}/imgcreate/*.pyc
+%dir %{py_sitedir}/imgcreate
+%{py_sitedir}/imgcreate/*.py
+%{py_sitedir}/imgcreate/*.pyo
+%{py_sitedir}/imgcreate/*.pyc
+
+%files -n livecd-iso-to-disk
+%{_bindir}/livecd-iso-to-disk

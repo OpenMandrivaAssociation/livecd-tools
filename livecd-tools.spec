@@ -3,7 +3,7 @@
 Summary: Tools for building live CDs
 Name: livecd-tools
 Version: 031
-Release: %mkrel 34
+Release: %mkrel 35
 License: GPLv2
 Group: System/Base
 Buildarch: noarch
@@ -43,6 +43,9 @@ Patch22: livecd-tools-031-timeout-before-losetup-d.patch
 Tools for generating live CDs on Fedora based systems including
 derived distributions such as RHEL, CentOS and others. See
 http://fedoraproject.org/wiki/FedoraLiveCD for more details.
+
+This package contains the patches required to allow building live images on
+Mandriva systems.
 
 %package -n python-imgcreate
 Summary: Python modules for building system images

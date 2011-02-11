@@ -3,7 +3,7 @@
 Summary: Tools for building live CDs
 Name: livecd-tools
 Version: 031
-Release: %mkrel 35
+Release: %mkrel 36
 License: GPLv2
 Group: System/Base
 Buildarch: noarch
@@ -37,6 +37,9 @@ Patch19: livecd-tools-031-iso-to-disk-oem.patch
 Patch20: livecd-tools-031-post-packages.patch
 Patch21: livecd-tools-031-lazy-umount.patch
 Patch22: livecd-tools-031-timeout-before-losetup-d.patch
+Patch23: livecd-tools-031-xz.patch
+# (eugeni) a temporary workaround to allow mixing packages from different repos
+Patch24: livecd-tools-031-no-verify.patch
 
 
 %description 
@@ -90,6 +93,8 @@ Convert a live CD iso so that it's bootable off of a USB stick
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
+%patch23 -p1
+%patch24 -p1
 
 %build
 make

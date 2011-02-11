@@ -88,12 +88,14 @@ Convert a live CD iso so that it's bootable off of a USB stick
 %patch15 -p1
 %patch16 -p1
 %patch17 -p1
-%patch18 -p1
+# (eugeni) disable both lzma and xz compression until cooker kernel is able to support them (needs 2.6.38+)
+#%patch18 -p1
 %patch19 -p1
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
-%patch23 -p1
+# (eugeni) disable both lzma and xz compression until cooker kernel is able to support them (needs 2.6.38+)
+#%patch23 -p1
 %patch24 -p1
 
 %build

@@ -3,7 +3,7 @@
 Summary: Tools for building live CDs
 Name: livecd-tools
 Version: 031
-Release: %mkrel 37
+Release: %mkrel 40
 License: GPLv2
 Group: System/Base
 Buildarch: noarch
@@ -40,6 +40,7 @@ Patch22: livecd-tools-031-timeout-before-losetup-d.patch
 Patch23: livecd-tools-031-xz.patch
 # (eugeni) a temporary workaround to allow mixing packages from different repos
 Patch24: livecd-tools-031-no-verify.patch
+Patch25: livecd-tools-031-iso-to-disk-oem-man.patch
 
 
 %description 
@@ -56,7 +57,7 @@ Group: System/Base
 Requires: util-linux
 Requires: coreutils
 Requires: e2fsprogs
-Requires: yum >= 3.2.18
+#Requires: yum >= 3.2.18
 Requires: squashfs-tools
 #Requires: python-kickstart >= 0.96
 Requires: pykickstart >= 1.77-3
@@ -95,6 +96,7 @@ Convert a live CD iso so that it's bootable off of a USB stick
 %patch22 -p1
 %patch23 -p1
 %patch24 -p1
+%patch25 -p1
 
 %build
 make

@@ -79,7 +79,7 @@ Convert a live CD iso so that it's bootable off of a USB stick
 
 %prep
 %setup -q
-%patch100 -p0
+#%patch100 -p0
 %patch0 -p1
 %patch10 -p1
 %patch11 -p1

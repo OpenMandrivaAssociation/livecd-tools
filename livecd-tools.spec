@@ -41,6 +41,7 @@ Patch23: livecd-tools-031-xz.patch
 Patch24: livecd-tools-031-iso-to-disk-oem-man.patch
 # (eugeni) a temporary workaround to allow mixing packages from different repos
 Patch25: livecd-tools-031-no-verify.patch
+Patch26: livecd-tools-031-urpmi-split-length.patch
 
 
 %description 
@@ -97,6 +98,7 @@ Convert a live CD iso so that it's bootable off of a USB stick
 %patch23 -p1
 %patch24 -p1
 %patch25 -p1 -F 5
+%patch26 -p1
 
 %build
 make

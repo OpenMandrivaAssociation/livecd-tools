@@ -3,7 +3,7 @@
 Summary: Tools for building live CDs
 Name: livecd-tools
 Version: 031
-Release: %mkrel 43
+Release: %mkrel 44
 License: GPLv2
 Group: System/Base
 Buildarch: noarch
@@ -101,7 +101,8 @@ Convert a live CD iso so that it's bootable off of a USB stick
 %patch23 -p1
 %patch24 -p1
 %patch25 -p1 -F 5
-%patch26 -p1
+# (eugeni) urpmi/rpm are fixed, reenabling transactions
+#%patch26 -p1
 %patch27 -p1
 %patch28 -p1
 
@@ -129,10 +130,10 @@ rm -rf $RPM_BUILD_ROOT
 %files -n python-imgcreate
 %defattr(-,root,root,-)
 %doc API
-%dir %{py_sitedir}/imgcreate
-%{py_sitedir}/imgcreate/*.py
-%{py_sitedir}/imgcreate/*.pyo
-%{py_sitedir}/imgcreate/*.pyc
+%dir %{py_platsitedir}/imgcreate
+%{py_platsitedir}/imgcreate/*.py
+%{py_platsitedir}/imgcreate/*.pyo
+%{py_platsitedir}/imgcreate/*.pyc
 
 %files -n livecd-iso-to-disk
 %{_bindir}/livecd-iso-to-disk

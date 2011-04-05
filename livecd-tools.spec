@@ -3,7 +3,7 @@
 Summary: Tools for building live CDs
 Name: livecd-tools
 Version: 031
-Release: %mkrel 42
+Release: %mkrel 43
 License: GPLv2
 Group: System/Base
 Buildarch: noarch
@@ -43,6 +43,9 @@ Patch24: livecd-tools-031-iso-to-disk-oem-man.patch
 Patch25: livecd-tools-031-no-verify.patch
 Patch26: livecd-tools-031-urpmi-split-length.patch
 
+#next patch
+Patch27: livecd-tools-031-fdisk-unit-cylinder.patch
+Patch28: livecd-tools-031-cp-progress-bar.patch
 
 %description 
 Tools for generating live CDs on Fedora based systems including
@@ -99,6 +102,8 @@ Convert a live CD iso so that it's bootable off of a USB stick
 %patch24 -p1
 %patch25 -p1 -F 5
 %patch26 -p1
+%patch27 -p1
+%patch28 -p1
 
 %build
 make

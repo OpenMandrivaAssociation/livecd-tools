@@ -130,10 +130,10 @@ rm -rf $RPM_BUILD_ROOT
 %files -n python-imgcreate
 %defattr(-,root,root,-)
 %doc API
-%dir %{py_platsitedir}/imgcreate
-%{py_platsitedir}/imgcreate/*.py
-%{py_platsitedir}/imgcreate/*.pyo
-%{py_platsitedir}/imgcreate/*.pyc
+%dir %{py_sitedir}/imgcreate
+%{py_sitedir}/imgcreate/*.py
+%{py_sitedir}/imgcreate/*.pyo
+%{py_sitedir}/imgcreate/*.pyc
 
 %files -n livecd-iso-to-disk
 %{_bindir}/livecd-iso-to-disk

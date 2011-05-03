@@ -3,7 +3,7 @@
 Summary: Tools for building live CDs
 Name: livecd-tools
 Version: 031
-Release: %mkrel 44
+Release: %mkrel 45
 License: GPLv2
 Group: System/Base
 Buildarch: noarch
@@ -12,6 +12,7 @@ Source0: %{name}-%{version}.tar.bz2
 Patch100: fix-libdir-in-python.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires: python-imgcreate = %{version}-%{release}
+Requires: python-rpm python-selinux
 Requires: mkisofs
 Requires: isomd5sum
 Requires: parted

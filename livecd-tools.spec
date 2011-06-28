@@ -47,6 +47,8 @@ Patch26: livecd-tools-031-urpmi-split-length.patch
 #next patch
 Patch27: livecd-tools-031-fdisk-unit-cylinder.patch
 Patch28: livecd-tools-031-cp-progress-bar.patch
+# (eugeni) fix format change in dmsetup output parsing
+Patch29: livecd-tools-031-new_dmsetup.patch
 
 %description 
 Tools for generating live CDs on Fedora based systems including

@@ -3,7 +3,7 @@
 Summary: Tools for building live CDs
 Name: livecd-tools
 Version: 031
-Release: %mkrel 45
+Release: %mkrel 46
 License: GPLv2
 Group: System/Base
 Buildarch: noarch

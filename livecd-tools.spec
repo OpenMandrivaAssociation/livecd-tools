@@ -3,7 +3,7 @@
 Summary: Tools for building live CDs
 Name: livecd-tools
 Version: 031
-Release: %mkrel 47
+Release: %mkrel 48
 License: GPLv2
 Group: System/Base
 Buildarch: noarch
@@ -108,6 +108,7 @@ Convert a live CD iso so that it's bootable off of a USB stick
 #%patch26 -p1
 %patch27 -p1
 %patch28 -p1
+%patch29 -p1
 
 %build
 make

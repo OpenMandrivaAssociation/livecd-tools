@@ -114,13 +114,13 @@ Convert a live CD iso so that it's bootable off of a USB stick
 make
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot}
 
 mv %{buildroot}/%{_docdir}/%{name}-%{version}/  %{buildroot}/%{_docdir}/%{name}/
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)

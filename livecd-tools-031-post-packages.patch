@@ -1,0 +1,20 @@
+diff -ur livecd-tools-031.orig/imgcreate/creator.py livecd-tools-031/imgcreate/creator.py
+--- livecd-tools-031.orig/imgcreate/creator.py	2011-02-16 18:32:44.000000000 +0300
++++ livecd-tools-031/imgcreate/creator.py	2011-02-16 18:34:48.473734235 +0300
+@@ -636,11 +636,15 @@
+             subprocess.call(["/usr/sbin/urpmi.addmedia", "--urpmi-root", urpmi_conf, name, baseurl])
+ 
+         packages = self.ks.handler.packages.packageList
++        packages_post = self.ks.handler.packages_post.packageList
+ 
+         #for package in self.ks.handler.packages.packageList:
+             #subprocess.call(["/usr/sbin/urpmi", "--auto", "--urpmi-root", urpmi_conf, "--root", self._instroot, package])
+         subprocess.call(["/usr/sbin/urpmi", "--auto", "--no-suggests", "--urpmi-root", urpmi_conf, "--root", self._instroot] + packages)
+ 
++        if packages_post:
++            subprocess.call(["/usr/sbin/urpmi", "--auto", "--no-suggests", "--urpmi-root", urpmi_conf, "--root", self._instroot] + packages_post)
++
+     #def install(self, repo_urls = {}):
+         #"""Install packages into the install root.
+ 
+Только в livecd-tools-031/imgcreate: creator.py~

@@ -1,0 +1,59 @@
+diff -ur livecd-tools-031.orig/tools/livecd-iso-to-disk.sh livecd-tools-031/tools/livecd-iso-to-disk.sh
+--- livecd-tools-031.orig/tools/livecd-iso-to-disk.sh	2009-10-30 00:26:09.000000000 +0300
++++ livecd-tools-031/tools/livecd-iso-to-disk.sh	2010-10-21 11:50:36.057388883 +0400
+@@ -131,7 +131,7 @@
+     if [ "$(/sbin/fdisk -l $device 2>/dev/null |grep $dev |awk {'print $2;'})" != "*" ]; then
+ 	echo "Partition isn't marked bootable!"
+ 	echo "You can mark the partition as bootable with "
+-        echo "    # /sbin/parted $device"
++        echo "    # /usr/sbin/parted $device"
+ 	echo "    (parted) toggle N boot"
+ 	echo "    (parted) quit"
+ 	exitclean
+@@ -146,10 +146,10 @@
+     echo "Press Enter to continue or ctrl-c to abort"
+     read
+     umount ${device}? &> /dev/null
+-    /sbin/parted --script $device mklabel gpt
+-    partinfo=$(/sbin/parted --script -m $device "unit b print" |grep ^$device:)
++    /usr/sbin/parted --script $device mklabel gpt
++    partinfo=$(/usr/sbin/parted --script -m $device "unit b print" |grep ^$device:)
+     size=$(echo $partinfo |cut -d : -f 2 |sed -e 's/B$//')
+-    /sbin/parted --script $device unit b mkpart '"EFI System Partition"' fat32 17408 $(($size - 17408)) set 1 boot on
++    /usr/sbin/parted --script $device unit b mkpart '"EFI System Partition"' fat32 17408 $(($size - 17408)) set 1 boot on
+     USBDEV=${device}1
+     # Sometimes automount can be _really_ annoying.
+     echo "Waiting for devices to settle..."
+@@ -168,10 +168,10 @@
+     echo "Press Enter to continue or ctrl-c to abort"
+     read
+     umount ${device}? &> /dev/null
+-    /sbin/parted --script $device mklabel msdos
+-    partinfo=$(/sbin/parted --script -m $device "unit b print" |grep ^$device:)
++    /usr/sbin/parted --script $device mklabel msdos
++    partinfo=$(/usr/sbin/parted --script -m $device "unit b print" |grep ^$device:)
+     size=$(echo $partinfo |cut -d : -f 2 |sed -e 's/B$//')
+-    /sbin/parted --script $device unit b mkpart primary fat32 17408 $(($size - 17408)) set 1 boot on
++    /usr/sbin/parted --script $device unit b mkpart primary fat32 17408 $(($size - 17408)) set 1 boot on
+     USBDEV=${device}1
+     # Sometimes automount can be _really_ annoying.
+     echo "Waiting for devices to settle..."
+@@ -192,7 +192,7 @@
+        exitclean
+     fi
+ 
+-    partinfo=$(/sbin/parted --script -m $device "print" |grep ^$partnum:)
++    partinfo=$(/usr/sbin/parted --script -m $device "print" |grep ^$partnum:)
+     volname=$(echo $partinfo |cut -d : -f 6)
+     flags=$(echo $partinfo |cut -d : -f 7)
+     if [ "$volname" != "EFI System Partition" ]; then
+@@ -203,7 +203,7 @@
+     if [ "$(echo $flags |grep -c boot)" = "0" ]; then
+ 	echo "Partition isn't marked bootable!"
+ 	echo "You can mark the partition as bootable with "
+-        echo "    # /sbin/parted $device"
++        echo "    # /usr/sbin/parted $device"
+ 	echo "    (parted) toggle N boot"
+ 	echo "    (parted) quit"
+ 	exitclean
+Только в livecd-tools-031/tools: livecd-iso-to-disk.sh~

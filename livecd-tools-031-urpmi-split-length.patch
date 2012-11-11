@@ -1,0 +1,17 @@
+diff -ru livecd-tools-031.orig/imgcreate/creator.py livecd-tools-031/imgcreate/creator.py
+--- livecd-tools-031.orig/imgcreate/creator.py	2011-03-30 15:40:36.486597560 +0000
++++ livecd-tools-031/imgcreate/creator.py	2011-03-30 15:41:45.646156329 +0000
+@@ -640,10 +640,10 @@
+ 
+         #for package in self.ks.handler.packages.packageList:
+             #subprocess.call(["/usr/sbin/urpmi", "--auto", "--urpmi-root", urpmi_conf, "--root", self._instroot, package])
+-        subprocess.call(["/usr/sbin/urpmi", "--auto", "--no-verify-rpm", "--no-suggests", "--urpmi-root", urpmi_conf, "--root", self._instroot] + packages)
++        subprocess.call(["/usr/sbin/urpmi", "--auto", "--split-length", "0", "--no-verify-rpm", "--no-suggests", "--urpmi-root", urpmi_conf, "--root", self._instroot] + packages)
+ 
+         if packages_post:
+-            subprocess.call(["/usr/sbin/urpmi", "--auto", "--no-verify-rpm", "--no-suggests", "--urpmi-root", urpmi_conf, "--root", self._instroot] + packages_post)
++            subprocess.call(["/usr/sbin/urpmi", "--auto", "--split-length", "0", "--no-verify-rpm", "--no-suggests", "--urpmi-root", urpmi_conf, "--root", self._instroot] + packages_post)
+ 
+     #def install(self, repo_urls = {}):
+         #"""Install packages into the install root.
+Only in livecd-tools-031.orig/imgcreate: creator.py.patched

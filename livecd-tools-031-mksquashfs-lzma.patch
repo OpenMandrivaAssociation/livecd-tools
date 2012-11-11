@@ -1,0 +1,13 @@
+diff -ur livecd-tools-031.orig/imgcreate/fs.py livecd-tools-031/imgcreate/fs.py
+--- livecd-tools-031.orig/imgcreate/fs.py	2010-12-08 18:43:29.000000000 +0300
++++ livecd-tools-031/imgcreate/fs.py	2010-12-08 18:44:53.486771013 +0300
+@@ -42,7 +42,7 @@
+ 
+ def mksquashfs(in_img, out_img):
+     #args = ["/sbin/mksquashfs", in_img, out_img]
+-    args = ["/usr/bin/mksquashfs", in_img, out_img]
++    args = ["/usr/bin/mksquashfs", in_img, out_img, "-comp", "lzma"]
+ 
+     if not sys.stdout.isatty():
+         args.append("-no-progress")
+Только в livecd-tools-031/imgcreate: fs.py~

@@ -1,0 +1,12 @@
+diff -ur livecd-tools-031.orig/imgcreate/fs.py livecd-tools-031/imgcreate/fs.py
+--- livecd-tools-031.orig/imgcreate/fs.py	2011-01-11 17:06:56.000000000 +0300
++++ livecd-tools-031/imgcreate/fs.py	2011-01-11 17:07:46.503095232 +0300
+@@ -279,6 +279,7 @@
+         if self.device is None:
+             return
+         logging.debug("Losetup remove %s" % self.device)
++        time.sleep(3)
+         rc = subprocess.call(["/sbin/losetup", "-d", self.device])
+         self.device = None
+ 
+Только в livecd-tools-031/imgcreate: fs.py~

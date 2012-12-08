@@ -1,0 +1,45 @@
+diff -Nur livecd-tools-18.8.old/imgcreate/live.py livecd-tools-18.8/imgcreate/live.py
+--- livecd-tools-18.8.old/imgcreate/live.py	2012-11-28 06:12:44.000000000 +0400
++++ livecd-tools-18.8/imgcreate/live.py	2012-11-28 06:16:14.415089739 +0400
+@@ -607,7 +607,7 @@
+                                            liveargs = kern_opts,
+                                            long = "Start " + long + " in basic graphics mode.",
+                                            short = "basic" + index,
+-                                           extra = "xdriver=vesa nomodeset",
++                                           extra = "nomodeset",
+                                            help = "Try this option out if you're having trouble starting.",
+                                            index = index))
+             linux.append(self.__get_image_stanza(is_xen, isDracut,
+@@ -666,7 +666,14 @@
+     def __get_local_stanza(self, isodir):
+         return """label local
+   menu label Boot from local drive
+-  localboot 0x80
++  localboot 0xffff
++"""
++
++    def __get_grub2_stanza(self, isodir):
++        return """label Rescue
++  menu label Run super grub2 disk
++  kernel memdisk
++  append initrd=sgb.iso
+ """
+ 
+     def _configure_syslinux_bootloader(self, isodir):
+@@ -702,11 +709,16 @@
+             cfg += b
+             if c:
+                 cfg += c
++#        for b in basic:
++#            cfg += b
++#        for c in check:
++#            cfg += c
+ 
+         cfg += self.__get_memtest_stanza(isodir)
+         cfg += "menu separator\n"
+ 
+         cfg += self.__get_local_stanza(isodir)
++        cfg += self.__get_grub2_stanza(isodir)
+         cfg += self._get_isolinux_stanzas(isodir)
+ 
+         cfg += """menu separator

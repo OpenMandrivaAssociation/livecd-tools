@@ -1,62 +1,53 @@
+%{!?python_sitelib: %define python_sitelib %(%{__python} -c "import distutils.sysconfig as d; print d.get_python_lib()")}
+
 %define debug_package %{nil}
 
 Summary: Tools for building live CDs
 Name: livecd-tools
-Version: 031
-Release: %mkrel 48
+Version: 18.8
+Release: 16
+Epoch: 1
 License: GPLv2
 Group: System/Base
-Buildarch: noarch
-URL: http://git.fedoraproject.org/?p=hosted/livecd
-Source0: %{name}-%{version}.tar.bz2
-Patch100: fix-libdir-in-python.patch
+URL: http://git.fedorahosted.org/git/livecd
+# To make source tar ball:
+# git clone git://git.fedorahosted.org/livecd
+# cd livecd
+# make dist
+# scp livecd*.tar.bz2 fedorahosted.org:livecd
+Source0: http://fedorahosted.org/releases/l/i/livecd/%{name}-%{version}.tar.bz2
+Source1: arch.py
+Patch0: livecd-tools-18.8.urpmi.rosa.patch
+Patch1: livecd-tools-18.8.noyum.patch
+Patch2: livecd-tools-18.8.more.fixes.patch
+Patch3: livecd-tools-18.8.localboot.patch
+Patch4: livecd-tools-18.8.revert.patch
+Patch5: livecd-tools-18.8.sgb2.patch
+Patch6: livecd-tools-18.8.safemode.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-Requires: python-imgcreate = %{version}-%{release}
-Requires: python-rpm python-selinux
+Requires: python-imgcreate = %{epoch}:%{version}-%{release}
 Requires: mkisofs
 Requires: isomd5sum
 Requires: parted
+Requires: pyparted
+Requires: util-linux
+Requires: dosfstools
+Requires: e2fsprogs
+Requires: lorax >= 18.3
+Obsoletes: livecd-iso-to-disk
+
 %ifarch %{ix86} x86_64
 Requires: syslinux
 %endif
-%ifarch ppc
-Requires: yaboot
-%endif
+Requires: dumpet
 BuildRequires: python
-BuildRequires: perl
-Patch0: 0001-Disable-iswmd-on-live-images-for-now.patch
-Patch10: livecd-tools-031-menu-config.patch
-Patch11: livecd-tools-031-dracut.patch
-Patch12: livecd-tools-031-not-use-rhpl-python.patch
-Patch13: livecd-tools-031-use-urpmi.patch
-Patch14: livecd-tools-031-yum-not-needed.patch
-Patch15: livecd-tools-031-parted-path.patch 
-Patch16: livecd-tools-031-yum-option.patch
-Patch17: livecd-tools-031-without-language-config.patch
-Patch18: livecd-tools-031-mksquashfs-lzma.patch
-Patch19: livecd-tools-031-iso-to-disk-oem.patch
-Patch20: livecd-tools-031-post-packages.patch
-Patch21: livecd-tools-031-lazy-umount.patch
-Patch22: livecd-tools-031-timeout-before-losetup-d.patch
-Patch23: livecd-tools-031-xz.patch
-Patch24: livecd-tools-031-iso-to-disk-oem-man.patch
-# (eugeni) a temporary workaround to allow mixing packages from different repos
-Patch25: livecd-tools-031-no-verify.patch
-Patch26: livecd-tools-031-urpmi-split-length.patch
+BuildRequires: /usr/bin/pod2man
 
-#next patch
-Patch27: livecd-tools-031-fdisk-unit-cylinder.patch
-Patch28: livecd-tools-031-cp-progress-bar.patch
-# (eugeni) fix format change in dmsetup output parsing
-Patch29: livecd-tools-031-new_dmsetup.patch
 
 %description 
 Tools for generating live CDs on Fedora based systems including
 derived distributions such as RHEL, CentOS and others. See
 http://fedoraproject.org/wiki/FedoraLiveCD for more details.
-
-This package contains the patches required to allow building live images on
-Mandriva systems.
 
 %package -n python-imgcreate
 Summary: Python modules for building system images
@@ -64,63 +55,40 @@ Group: System/Base
 Requires: util-linux
 Requires: coreutils
 Requires: e2fsprogs
-#Requires: yum >= 3.2.18
 Requires: squashfs-tools
-#Requires: python-kickstart >= 0.96
-Requires: pykickstart >= 1.77-3
+Requires: pykickstart >= 0.96
 Requires: dosfstools >= 2.11-8
 #Requires: system-config-keyboard >= 1.3.0
 Requires: python-urlgrabber
+Requires: python-selinux
 Requires: dbus-python
-Conflicts: livecd-tools < 0.31
+#Requires: policycoreutils
 
 %description -n python-imgcreate
 Python modules that can be used for building images for things
 like live image or appliances.
 
-%package -n livecd-iso-to-disk
-Summary: Script for copy iso to disk
-
-%description -n livecd-iso-to-disk
-Convert a live CD iso so that it's bootable off of a USB stick
 
 %prep
 %setup -q
-#%patch100 -p0
 %patch0 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
-#%patch16 -p1
-%patch17 -p1
-%patch18 -p1
-%patch19 -p1
-%patch20 -p1
-%patch21 -p1
-%patch22 -p1
-%patch23 -p1
-%patch24 -p1
-%patch25 -p1 -F 5
-# (eugeni) urpmi/rpm are fixed, reenabling transactions
-#%patch26 -p1
-%patch27 -p1
-%patch28 -p1
-%patch29 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
 
 %build
 make
 
 %install
-rm -rf %{buildroot}
-make install DESTDIR=%{buildroot}
-
-mv %{buildroot}/%{_docdir}/%{name}-%{version}/  %{buildroot}/%{_docdir}/%{name}/
+rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
+%__install -m 0644 %{SOURCE1} %{buildroot}%{python_sitelib}/imgcreate/
 
 %clean
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
@@ -128,16 +96,23 @@ rm -rf %{buildroot}
 %doc config/livecd-fedora-minimal.ks
 %{_mandir}/man*/*
 %{_bindir}/livecd-creator
+%{_bindir}/livecd-iso-to-disk
 %{_bindir}/livecd-iso-to-pxeboot
 %{_bindir}/image-creator
+%{_bindir}/liveimage-mount
+%{_bindir}/edit-livecd
+%{_bindir}/mkbiarch
+/usr/share/doc/livecd-tools*
 
 %files -n python-imgcreate
 %defattr(-,root,root,-)
-%doc API
-%dir %{py_sitedir}/imgcreate
-%{py_sitedir}/imgcreate/*.py
-%{py_sitedir}/imgcreate/*.pyo
-%{py_sitedir}/imgcreate/*.pyc
+%doc API COPYING
+%dir %{python_sitelib}/imgcreate
+%{python_sitelib}/imgcreate/*.py
+%{python_sitelib}/imgcreate/*.pyo
+%{python_sitelib}/imgcreate/*.pyc
 
-%files -n livecd-iso-to-disk
-%{_bindir}/livecd-iso-to-disk
+%changelog
+* Mon Aug 06 2012 Brian C. Lane <bcl@redhat.com> 18.8-1
+- Version 18.8 (bcl)
+- dracut needs to load vfat and msdos filesystems (bcl)

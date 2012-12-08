@@ -1,0 +1,420 @@
+diff -Nur livecd-tools-18.8.orig/imgcreate/creator.py livecd-tools-18.8/imgcreate/creator.py
+--- livecd-tools-18.8.orig/imgcreate/creator.py	2012-08-06 22:49:20.000000000 +0400
++++ livecd-tools-18.8/imgcreate/creator.py	2012-09-19 19:32:11.000000000 +0400
+@@ -17,6 +17,7 @@
+ # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ 
+ import os
++import time
+ import os.path
+ import stat
+ import sys
+@@ -608,6 +609,23 @@
+         if not kickstart.selinux_enabled(self.ks) and selinux.is_selinux_enabled() and not ayum.installHasFile(file):
+             raise CreatorError("Unable to disable SELinux because the installed package set did not include the file %s" % (file))
+ 
++    def install_urpmi(self, repo_urls = {}):
++
++        urpmi_conf = self.__builddir + "/urpmi_conf"
++        print urpmi_conf
++        time.sleep(5)
++
++        for repo in kickstart.get_repos(self.ks, repo_urls):
++            (name, baseurl, mirrorlist, proxy, inc, exc, cost) = repo
++            subprocess.call(["/usr/sbin/urpmi.addmedia", "--urpmi-root", urpmi_conf, name, baseurl])
++
++        packages = self.ks.handler.packages.packageList
++
++        #for package in self.ks.handler.packages.packageList:
++            #subprocess.call(["/usr/sbin/urpmi", "--auto", "--urpmi-root", urpmi_conf, "--root", self._instroot, package])
++        subprocess.call(["/usr/sbin/urpmi", "--auto", "--no-suggests", "--no-verify", "--urpmi-root", urpmi_conf, "--root", self._instroot] + packages)
++
++
+     def install(self, repo_urls = {}):
+         """Install packages into the install root.
+ 
+@@ -729,9 +747,9 @@
+         kickstart.NetworkConfig(self._instroot).apply(ksh.network)
+         kickstart.RPMMacroConfig(self._instroot).apply(self.ks)
+ 
+-        self._create_bootconfig()
+ 
+         self._run_post_scripts()
++        self._create_bootconfig()
+         kickstart.SelinuxConfig(self._instroot).apply(ksh.selinux)
+ 
+     def launch_shell(self):
+diff -Nur livecd-tools-18.8.orig/imgcreate/errors.py livecd-tools-18.8/imgcreate/errors.py
+--- livecd-tools-18.8.orig/imgcreate/errors.py	2012-08-06 22:49:20.000000000 +0400
++++ livecd-tools-18.8/imgcreate/errors.py	2012-09-19 19:24:22.000000000 +0400
+@@ -54,3 +54,5 @@
+     pass
+ class ResizeError(CreatorError):
+     pass
++class InitramfsError(CreatorError):
++    pass
+\ В конце файла нет новой строки
+diff -Nur livecd-tools-18.8.orig/imgcreate/fs.py livecd-tools-18.8/imgcreate/fs.py
+--- livecd-tools-18.8.orig/imgcreate/fs.py	2012-08-06 22:49:20.000000000 +0400
++++ livecd-tools-18.8/imgcreate/fs.py	2012-09-18 14:02:48.000000000 +0400
+@@ -73,9 +73,9 @@
+ def mksquashfs(in_img, out_img, compress_type):
+ # Allow gzip to work for older versions of mksquashfs
+     if compress_type == "gzip":
+-        args = ["/sbin/mksquashfs", in_img, out_img]
++        args = ["/usr/bin/mksquashfs", in_img, out_img]
+     else:
+-        args = ["/sbin/mksquashfs", in_img, out_img, "-comp", compress_type]
++        args = ["/usr/bin/mksquashfs", in_img, out_img, "-comp", compress_type]
+ 
+     if not sys.stdout.isatty():
+         args.append("-no-progress")
+@@ -605,7 +605,7 @@
+         # where C is the number of 512 byte sectors in use
+         #
+         try:
+-            return int((out.split()[3]).split('/')[0]) * 512
++            return int((out.split()[4]).split('/')[0]) * 512
+         except ValueError:
+             raise SnapshotError("Failed to parse dmsetup status: " + out)
+ 
+diff -Nur livecd-tools-18.8.orig/imgcreate/kickstart.py livecd-tools-18.8/imgcreate/kickstart.py
+--- livecd-tools-18.8.orig/imgcreate/kickstart.py	2012-08-06 22:49:20.000000000 +0400
++++ livecd-tools-18.8/imgcreate/kickstart.py	2012-09-18 15:30:33.000000000 +0400
+@@ -25,10 +25,10 @@
+ import urlgrabber
+ import selinux
+ 
+-try:
+-    import system_config_keyboard.keyboard as keyboard
+-except ImportError:
+-    import rhpl.keyboard as keyboard
++#try:
++#    import system_config_keyboard.keyboard as keyboard
++#except ImportError:
++#    import rhpl.keyboard as keyboard
+ 
+ import pykickstart.commands as kscommands
+ import pykickstart.constants as ksconstants
+@@ -138,10 +138,13 @@
+ class KeyboardConfig(KickstartConfig):
+     """A class to apply a kickstart keyboard configuration to a system."""
+     def apply(self, kskeyboard):
+-        k = keyboard.Keyboard()
+-        if kskeyboard.keyboard:
+-            k.set(kskeyboard.keyboard)
+-        k.write(self.instroot)
++#        k = keyboard.Keyboard()
++            f = open(self.path("/etc/sysconfig/keyboard"), "w+")
++            f.write("KEYBOARD=\"" + kskeyboard.keyboard + "\"\n")
++            f.close()
++#        if kskeyboard.keyboard:
++#            k.set(kskeyboard.keyboard)
++#        k.write(self.instroot)
+ 
+ class TimezoneConfig(KickstartConfig):
+     """A class to apply a kickstart timezone configuration to a system."""
+diff -Nur livecd-tools-18.8.orig/imgcreate/live.py livecd-tools-18.8/imgcreate/live.py
+--- livecd-tools-18.8.orig/imgcreate/live.py	2012-08-06 22:49:20.000000000 +0400
++++ livecd-tools-18.8/imgcreate/live.py	2012-09-24 15:08:38.000000000 +0400
+@@ -159,7 +159,7 @@
+         # Copy the initrd%d.img and xen%d.gz files over to /isolinux
+         # This is because the originals in /boot are removed when the
+         # original .iso was created.
+-        src = isoloop.mountdir + "/isolinux/"
++        src = isoloop.mountdir + "/boot/"
+         dest = self.__ensure_isodir() + "/isolinux/"
+         makedirs(dest)
+         pattern = re.compile(r"(initrd\d+\.img|xen\d+\.gz)")
+@@ -230,15 +230,15 @@
+ 
+     def _generate_efiboot(self, isodir):
+         """Generate EFI boot images."""
+-        if not os.path.exists(self._instroot + "/boot/efi/EFI/redhat/grub.efi"):
++        if not os.path.exists(self._instroot + "/boot/efi/EFI/rosa/grub.efi"):
+             return False
+         subprocess.call(["mkefiboot", isodir + "/EFI/BOOT",
+                          isodir + "/isolinux/efiboot.img"])
+-        subprocess.call(["mkefiboot", "-a", isodir + "/EFI/BOOT",
+-                         isodir + "/isolinux/macboot.img", "-l", self.product,
+-                         "-n", "/usr/share/pixmaps/bootloader/fedora-media.vol",
+-                         "-i", "/usr/share/pixmaps/bootloader/fedora.icns",
+-                         "-p", self.product])
++#        subprocess.call(["mkefiboot", "-a", isodir + "/EFI/BOOT",
++#                         isodir + "/isolinux/macboot.img", "-l", self.product,
++#                         "-n", "/usr/share/pixmaps/bootloader/fedora-media.vol",
++#                         "-i", "/usr/share/pixmaps/bootloader/fedora.icns",
++#                         "-p", self.product])
+ 
+     def _create_bootconfig(self):
+         """Configure the image so that it's bootable."""
+@@ -382,9 +382,6 @@
+         if os.path.exists(isodir + "/isolinux/efiboot.img"):
+             options.extend([ "-eltorito-alt-boot",
+                              "-e", "isolinux/efiboot.img",
+-                             "-no-emul-boot",
+-                             "-eltorito-alt-boot",
+-                             "-e", "isolinux/macboot.img",
+                              "-no-emul-boot"])
+         return options
+ 
+@@ -430,12 +427,12 @@
+ 
+     def __copy_syslinux_background(self, isodest):
+         background_path = self._instroot + \
+-                          "/usr/share/anaconda/boot/syslinux-vesa-splash.jpg"
++                          "/welcome.jpg"
+ 
+         if not os.path.exists(background_path):
+             # fallback to F13 location
+             background_path = self._instroot + \
+-                              "/usr/lib/anaconda-runtime/syslinux-vesa-splash.jpg"
++                              "/welcome.jpg"
+ 
+             if not os.path.exists(background_path):
+                 return False
+@@ -449,17 +446,21 @@
+ 
+         shutil.copyfile(bootdir + "/vmlinuz-" + version,
+                         isodir + "/isolinux/vmlinuz" + index)
++        subprocess.call(["/usr/sbin/dracut", "/boot/initramfs-" + version + ".img", version],
++                        preexec_fn = self._chroot)
+ 
+         isDracut = False
+         if os.path.exists(bootdir + "/initramfs-" + version + ".img"):
+             shutil.copyfile(bootdir + "/initramfs-" + version + ".img",
+                             isodir + "/isolinux/initrd" + index + ".img")
+             isDracut = True
+-        elif os.path.exists(bootdir + "/initrd-" + version + ".img"):
+-            shutil.copyfile(bootdir + "/initrd-" + version + ".img",
+-                            isodir + "/isolinux/initrd" + index + ".img")
+-        elif not self.base_on:
+-            logging.error("No initrd or initramfs found for %s" % (version,))
++        else:
++            raise InitramfsError("Unable to create initramfs-" + version + ".img")
++#        elif os.path.exists(bootdir + "/initrd-" + version + ".img"):
++#            shutil.copyfile(bootdir + "/initrd-" + version + ".img",
++#                            isodir + "/isolinux/initrd" + index + ".img")
++#        elif not self.base_on:
++#            logging.error("No initrd or initramfs found for %s" % (version,))
+ 
+         is_xen = False
+         if os.path.exists(bootdir + "/xen.gz-" + version[:-3]):
+@@ -486,7 +487,7 @@
+ default %(menu)s
+ timeout %(timeout)d
+ menu background %(background)s
+-menu autoboot Starting %(title)s in # second{,s}. Press any key to interrupt.
++menu autoboot Starting ROSA Desktop 2012 in # second{,s}. Press any key to interrupt.
+ 
+ menu clear
+ menu title %(title)s
+@@ -499,10 +500,10 @@
+ 
+ menu color border * #00000000 #00000000 none
+ menu color sel 0 #ffffffff #00000000 none
+-menu color title 0 #ff7ba3d0 #00000000 none
+-menu color tabmsg 0 #ff3a6496 #00000000 none
+-menu color unsel 0 #84b8ffff #00000000 none
+-menu color hotsel 0 #84b8ffff #00000000 none
++menu color title 0 #ffffffff #00000000 none
++menu color tabmsg 0 #ffffffff #00000000 none
++menu color unsel 0 #ffffffff #00000000 none
++menu color hotsel 0 #ff000000 #ffffffff none
+ menu color hotkey 0 #ffffffff #00000000 none
+ menu color help 0 #ffffffff #00000000 none
+ menu color scrollbar 0 #ffffffff #ff355594 none
+@@ -586,11 +587,18 @@
+                                            extra = "",
+                                            help = "",
+                                            index = index))
++            kern_opts = kernel_options + " install"
+ 
+-            if default:
+-                linux[-1] += "  menu default\n"
+-
+-            basic.append(self.__get_image_stanza(is_xen, isDracut,
++            linux.append(self.__get_image_stanza(is_xen, isDracut,
++                                           fslabel = self.fslabel,
++                                           isofstype = "auto",
++                                           liveargs = kern_opts,
++                                           long = "^Install " + long,
++                                           short = "linux" + index,
++                                           extra = "",
++                                           help = "",
++                                           index = index))
++            linux.append(self.__get_image_stanza(is_xen, isDracut,
+                                            fslabel = self.fslabel,
+                                            isofstype = "auto",
+                                            liveargs = kern_opts,
+@@ -599,6 +607,23 @@
+                                            extra = "xdriver=vesa nomodeset",
+                                            help = "Try this option out if you're having trouble starting.",
+                                            index = index))
++            linux.append(self.__get_image_stanza(is_xen, isDracut,
++                                           fslabel = self.fslabel,
++                                           isofstype = "auto",
++                                           liveargs = kern_opts,
++                                           long = "Install " + long + " in ^basic graphics mode.",
++                                           short = "basic" + index,
++                                           extra = "xdriver=vesa nomodeset install",
++                                           help = "Try this option out if you're having trouble installing.",
++                                           index = index))
++            kern_opts = kernel_options
++
++            if default:
++                linux[-1] += "  menu default\n"
++
++
++
++
+ 
+             if checkisomd5:
+                 check.append(self.__get_image_stanza(is_xen, isDracut,
+@@ -610,6 +635,7 @@
+                                                extra = "rd.live.check",
+                                                help = "",
+                                                index = index))
++
+             else:
+                 check.append(None)
+ 
+@@ -669,10 +695,13 @@
+   menu title Troubleshooting
+ """
+         # Add basic video and check to submenu
+-        for b, c in zip(basic, check):
++        # my test
++#        for s in basic:
++#            cfg += s
++        for b in basic:
+             cfg += b
+-            if c:
+-                cfg += c
++        for c in check:
++            cfg += c
+ 
+         cfg += self.__get_memtest_stanza(isodir)
+         cfg += "menu separator\n"
+@@ -691,9 +720,9 @@
+         cfgf.close()
+ 
+     def __copy_efi_files(self, isodir):
+-        if not os.path.exists(self._instroot + "/boot/efi/EFI/redhat/grub.efi"):
++        if not os.path.exists(self._instroot + "/boot/efi/EFI/rosa/grub.efi"):
+             return False
+-        shutil.copy(self._instroot + "/boot/efi/EFI/redhat/grub.efi",
++        shutil.copy(self._instroot + "/boot/efi/EFI/rosa/grub.efi",
+                     isodir + "/EFI/BOOT/grub.efi")
+ 
+         # Should exist, but if it doesn't we should fail
+@@ -829,14 +858,17 @@
+ 
+         shutil.copyfile(bootdir + "/vmlinuz-" + version,
+                         destdir + "/vmlinuz")
++        subprocess.call(["/usr/sbin/dracut", "/boot/initramfs-" + version + ".img", version],
++                        preexec_fn = self._chroot)
+ 
+         if os.path.exists(bootdir + "/initramfs-" + version + ".img"):
+             shutil.copyfile(bootdir + "/initramfs-" + version + ".img",
+                             destdir + "/initrd.img")
+             isDracut = True
+         else:
+-            shutil.copyfile(bootdir + "/initrd-" + version + ".img",
+-                            destdir + "/initrd.img")
++            raise InitramfsError("Unable to create initramfs-" + version + ".img")
++#            shutil.copyfile(bootdir + "/initrd-" + version + ".img",
++#                            destdir + "/initrd.img")
+ 
+         return isDracut
+ 
+diff -Nur livecd-tools-18.8.orig/tools/livecd-iso-to-disk.sh livecd-tools-18.8/tools/livecd-iso-to-disk.sh
+--- livecd-tools-18.8.orig/tools/livecd-iso-to-disk.sh	2012-08-06 22:49:20.000000000 +0400
++++ livecd-tools-18.8/tools/livecd-iso-to-disk.sh	2012-09-18 14:02:48.000000000 +0400
+@@ -389,7 +389,7 @@
+     if [ "$(/sbin/fdisk -l $device 2>/dev/null |grep -m1 $dev |awk {'print $2;'})" != "*" ]; then
+         echo "Partition isn't marked bootable!"
+         echo "You can mark the partition as bootable with "
+-        echo "    # /sbin/parted $device"
++        echo "    # /usr/sbin/parted $device"
+         echo "    (parted) toggle N boot"
+         echo "    (parted) quit"
+         exitclean
+@@ -417,8 +417,8 @@
+     read
+     umount ${device}* &> /dev/null || :
+     wipefs -a ${device}
+-    /sbin/parted --script $device mklabel gpt
+-    partinfo=$(LC_ALL=C /sbin/parted --script -m $device "unit MB print" |grep ^$device:)
++    /usr/sbin/parted --script $device mklabel gpt
++    partinfo=$(LC_ALL=C /usr/sbin/parted --script -m $device "unit MB print" |grep ^$device:)
+     dev_size=$(echo $partinfo |cut -d : -f 2 |sed -e 's/MB$//')
+     p1_size=$(($dev_size - 3))
+ 
+@@ -429,7 +429,7 @@
+     fi
+     p1_start=1
+     p1_end=$(($p1_size + 1))
+-    /sbin/parted -s $device u MB mkpart '"EFI System Partition"' fat32 $p1_start $p1_end set 1 boot on
++    /usr/sbin/parted -s $device u MB mkpart '"EFI System Partition"' fat32 $p1_start $p1_end set 1 boot on
+     # Sometimes automount can be _really_ annoying.
+     echo "Waiting for devices to settle..."
+     /sbin/udevadm settle
+@@ -449,8 +449,8 @@
+     read
+     umount ${device}* &> /dev/null || :
+     wipefs -a ${device}
+-    /sbin/parted --script $device mklabel msdos
+-    partinfo=$(LC_ALL=C /sbin/parted --script -m $device "unit MB print" |grep ^$device:)
++    /usr/sbin/parted --script $device mklabel msdos
++    partinfo=$(LC_ALL=C /usr/sbin/parted --script -m $device "unit MB print" |grep ^$device:)
+     dev_size=$(echo $partinfo |cut -d : -f 2 |sed -e 's/MB$//')
+     p1_size=$(($dev_size - 3))
+ 
+@@ -461,7 +461,7 @@
+     fi
+     p1_start=1
+     p1_end=$(($p1_size + 1))
+-    /sbin/parted -s $device u MB mkpart primary fat32 $p1_start $p1_end set 1 boot on
++    /usr/sbin/parted -s $device u MB mkpart primary fat32 $p1_start $p1_end set 1 boot on
+     # Sometimes automount can be _really_ annoying.
+     echo "Waiting for devices to settle..."
+     /sbin/udevadm settle
+@@ -485,8 +485,8 @@
+     read
+     umount ${device}* &> /dev/null || :
+     wipefs -a ${device}
+-    /sbin/parted -s $device mklabel msdos
+-    partinfo=$(LC_ALL=C /sbin/parted -s -m $device "u MB print" |grep ^$device:)
++    /usr/sbin/parted -s $device mklabel msdos
++    partinfo=$(LC_ALL=C /usr/sbin/parted -s -m $device "u MB print" |grep ^$device:)
+     dev_size=$(echo $partinfo |cut -d : -f 2 |sed -e 's/MB$//')
+     p1_size=$(($dev_size - 3))
+ 
+@@ -497,7 +497,7 @@
+     fi
+     p1_start=1
+     p1_end=$(($p1_size + 1))
+-    /sbin/parted -s $device u MB mkpart primary ext2 $p1_start $p1_end set 1 boot on
++    /usr/sbin/parted -s $device u MB mkpart primary ext2 $p1_start $p1_end set 1 boot on
+     # Sometimes automount can be _really_ annoying.
+     echo "Waiting for devices to settle..."
+     /sbin/udevadm settle
+@@ -525,7 +525,7 @@
+         exitclean
+     fi
+ 
+-    partinfo=$(LC_ALL=C /sbin/parted --script -m $device "print" |grep ^$partnum:)
++    partinfo=$(LC_ALL=C /usr/sbin/parted --script -m $device "print" |grep ^$partnum:)
+     volname=$(echo $partinfo |cut -d : -f 6)
+     flags=$(echo $partinfo |cut -d : -f 7)
+     if [ "$volname" != "EFI System Partition" ]; then
+@@ -536,7 +536,7 @@
+     if [ "$(echo $flags |grep -c boot)" = "0" ]; then
+         echo "Partition isn't marked bootable!"
+         echo "You can mark the partition as bootable with "
+-        echo "    # /sbin/parted $device"
++        echo "    # /usr/sbin/parted $device"
+         echo "    (parted) toggle N boot"
+         echo "    (parted) quit"
+         exitclean

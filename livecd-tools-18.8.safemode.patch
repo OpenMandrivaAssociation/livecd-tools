@@ -1,0 +1,36 @@
+diff -Nur livecd-tools-18.8.old/imgcreate/live.py livecd-tools-18.8/imgcreate/live.py
+--- livecd-tools-18.8.old/imgcreate/live.py	2012-11-28 16:05:42.000000000 +0400
++++ livecd-tools-18.8/imgcreate/live.py	2012-11-28 16:06:32.267543759 +0400
+@@ -601,22 +601,22 @@
+                                            extra = "",
+                                            help = "",
+                                            index = index))
+-            linux.append(self.__get_image_stanza(is_xen, isDracut,
+-                                           fslabel = self.fslabel,
+-                                           isofstype = "auto",
+-                                           liveargs = kern_opts,
+-                                           long = "Start " + long + " in basic graphics mode.",
+-                                           short = "basic" + index,
+-                                           extra = "nomodeset",
+-                                           help = "Try this option out if you're having trouble starting.",
+-                                           index = index))
++#            linux.append(self.__get_image_stanza(is_xen, isDracut,
++#                                           fslabel = self.fslabel,
++#                                           isofstype = "auto",
++#                                           liveargs = kern_opts,
++#                                           long = "Start " + long + " in basic graphics mode.",
++#                                           short = "basic" + index,
++#                                           extra = "nomodeset",
++#                                           help = "Try this option out if you're having trouble starting.",
++#                                           index = index))
+             linux.append(self.__get_image_stanza(is_xen, isDracut,
+                                            fslabel = self.fslabel,
+                                            isofstype = "auto",
+                                            liveargs = kern_opts,
+                                            long = "Install " + long + " in basic graphics mode.",
+                                            short = "basic" + index,
+-                                           extra = "xdriver=vesa nomodeset install",
++                                           extra = "xdriver=vesa nokmsboot install",
+                                            help = "Try this option out if you're having trouble installing.",
+                                            index = index))
+             kern_opts = kernel_options

@@ -1,0 +1,316 @@
+diff -Nur livecd-tools-18.8.orig/imgcreate/creator.py livecd-tools-18.8/imgcreate/creator.py
+--- livecd-tools-18.8.orig/imgcreate/creator.py	2012-10-02 11:47:06.000000000 +0400
++++ livecd-tools-18.8/imgcreate/creator.py	2012-10-02 11:55:07.000000000 +0400
+@@ -27,12 +27,12 @@
+ import subprocess
+ 
+ import selinux
+-import yum
++#import yum
+ import rpm
+ 
+ from imgcreate.errors import *
+ from imgcreate.fs import *
+-from imgcreate.yuminst import *
++#from imgcreate.yuminst import *
+ from imgcreate import kickstart
+ 
+ FSLABEL_MAXLEN = 32
+@@ -501,17 +501,17 @@
+ 
+         self._mount_instroot(base_on)
+ 
+-        for d in ("/dev/pts", "/etc", "/boot", "/var/log", "/var/cache/yum", "/sys", "/proc"):
++        for d in ("/dev/pts", "/etc", "/boot", "/var/log", "/var/cache/urpmi", "/sys", "/proc"):
+             makedirs(self._instroot + d)
+ 
+-        cachesrc = cachedir or (self.__builddir + "/yum-cache")
++        cachesrc = cachedir or (self.__builddir + "/urpmi-cache")
+         makedirs(cachesrc)
+ 
+         # bind mount system directories into _instroot
+         for (f, dest) in [("/sys", None), ("/proc", None),
+                           ("/dev/pts", None), ("/dev/shm", None),
+                           (self.__selinux_mountpoint, self.__selinux_mountpoint),
+-                          (cachesrc, "/var/cache/yum")]:
++                          (cachesrc, "/var/cache/urpmi")]:
+             if os.path.exists(f):
+                 self.__bindmounts.append(BindChrootMount(f, self._instroot, dest))
+             else:
+@@ -566,49 +566,49 @@
+         shutil.rmtree(self.__builddir, ignore_errors = True)
+         self.__builddir = None
+ 
+-    def __select_packages(self, ayum):
+-        skipped_pkgs = []
+-        for pkg in kickstart.get_packages(self.ks,
+-                                          self._get_required_packages()):
+-            try:
+-                ayum.selectPackage(pkg)
+-            except yum.Errors.InstallError, e:
+-                if kickstart.ignore_missing(self.ks):
+-                    skipped_pkgs.append(pkg)
+-                else:
+-                    raise CreatorError("Failed to find package '%s' : %s" %
+-                                       (pkg, e))
+-
+-        for pkg in skipped_pkgs:
+-            logging.warn("Skipping missing package '%s'" % (pkg,))
+-
+-    def __select_groups(self, ayum):
+-        skipped_groups = []
+-        for group in kickstart.get_groups(self.ks):
+-            try:
+-                ayum.selectGroup(group.name, group.include)
+-            except (yum.Errors.InstallError, yum.Errors.GroupsError), e:
+-                if kickstart.ignore_missing(self.ks):
+-                    raise CreatorError("Failed to find group '%s' : %s" %
+-                                       (group.name, e))
+-                else:
+-                    skipped_groups.append(group)
+-
+-        for group in skipped_groups:
+-            logging.warn("Skipping missing group '%s'" % (group.name,))
+-
+-    def __deselect_packages(self, ayum):
+-        for pkg in kickstart.get_excluded(self.ks,
+-                                          self._get_excluded_packages()):
+-            ayum.deselectPackage(pkg)
++#    def __select_packages(self, ayum):
++#        skipped_pkgs = []
++#        for pkg in kickstart.get_packages(self.ks,
++#                                          self._get_required_packages()):
++#            try:
++#                ayum.selectPackage(pkg)
++#            except yum.Errors.InstallError, e:
++#                if kickstart.ignore_missing(self.ks):
++#                    skipped_pkgs.append(pkg)
++#                else:
++#                    raise CreatorError("Failed to find package '%s' : %s" %
++#                                       (pkg, e))
++
++#        for pkg in skipped_pkgs:
++#            logging.warn("Skipping missing package '%s'" % (pkg,))
++#
++#    def __select_groups(self, ayum):
++#        skipped_groups = []
++#        for group in kickstart.get_groups(self.ks):
++#            try:
++#                ayum.selectGroup(group.name, group.include)
++#            except (yum.Errors.InstallError, yum.Errors.GroupsError), e:
++#                if kickstart.ignore_missing(self.ks):
++#                    raise CreatorError("Failed to find group '%s' : %s" %
++#                                       (group.name, e))
++#                else:
++#                    skipped_groups.append(group)
++#
++#        for group in skipped_groups:
++#            logging.warn("Skipping missing group '%s'" % (group.name,))
++#
++#    def __deselect_packages(self, ayum):
++#        for pkg in kickstart.get_excluded(self.ks,
++#                                          self._get_excluded_packages()):
++#            ayum.deselectPackage(pkg)
+ 
+     # if the system is running selinux and the kickstart wants it disabled
+     # we need /usr/sbin/lokkit
+-    def __can_handle_selinux(self, ayum):
+-        file = "/usr/sbin/lokkit"
+-        if not kickstart.selinux_enabled(self.ks) and selinux.is_selinux_enabled() and not ayum.installHasFile(file):
+-            raise CreatorError("Unable to disable SELinux because the installed package set did not include the file %s" % (file))
+-
++#    def __can_handle_selinux(self, ayum):
++#        file = "/usr/sbin/lokkit"
++#        if not kickstart.selinux_enabled(self.ks) and selinux.is_selinux_enabled() and not ayum.installHasFile(file):
++#            raise CreatorError("Unable to disable SELinux because the installed package set did not include the file %s" % (file))
++#
+     def install_urpmi(self, repo_urls = {}):
+ 
+         urpmi_conf = self.__builddir + "/urpmi_conf"
+@@ -626,69 +626,69 @@
+         subprocess.call(["/usr/sbin/urpmi", "--auto", "--no-suggests", "--no-verify", "--urpmi-root", urpmi_conf, "--root", self._instroot] + packages)
+ 
+ 
+-    def install(self, repo_urls = {}):
+-        """Install packages into the install root.
+-
+-        This function installs the packages listed in the supplied kickstart
+-        into the install root. By default, the packages are installed from the
+-        repository URLs specified in the kickstart.
+-
+-        repo_urls -- a dict which maps a repository name to a repository URL;
+-                     if supplied, this causes any repository URLs specified in
+-                     the kickstart to be overridden.
+-
+-        """
+-        yum_conf = self._mktemp(prefix = "yum.conf-")
+-
+-        ayum = LiveCDYum(releasever=self.releasever, useplugins=self.useplugins)
+-        ayum.setup(yum_conf, self._instroot, cacheonly=self.cacheonly)
+-
+-        for repo in kickstart.get_repos(self.ks, repo_urls):
+-            (name, baseurl, mirrorlist, proxy, inc, exc, cost) = repo
+-
+-            yr = ayum.addRepository(name, baseurl, mirrorlist)
+-            if inc:
+-                yr.includepkgs = inc
+-            if exc:
+-                yr.exclude = exc
+-            if proxy:
+-                yr.proxy = proxy
+-            if cost is not None:
+-                yr.cost = cost
+-        ayum.setup(yum_conf, self._instroot)
+-
+-        if kickstart.exclude_docs(self.ks):
+-            rpm.addMacro("_excludedocs", "1")
+-        if not kickstart.selinux_enabled(self.ks):
+-            rpm.addMacro("__file_context_path", "%{nil}")
+-        if kickstart.inst_langs(self.ks) != None:
+-            rpm.addMacro("_install_langs", kickstart.inst_langs(self.ks))
+-
+-        try:
+-            self.__select_packages(ayum)
+-            self.__select_groups(ayum)
+-            self.__deselect_packages(ayum)
+-
+-            self.__can_handle_selinux(ayum)
+-
+-            ayum.runInstall()
+-        except yum.Errors.RepoError, e:
+-            raise CreatorError("Unable to download from repo : %s" % (e,))
+-        except yum.Errors.YumBaseError, e:
+-            raise CreatorError("Unable to install: %s" % (e,))
+-        finally:
+-            ayum.closeRpmDB()
+-            ayum.close()
+-            os.unlink(yum_conf)
++#    def install(self, repo_urls = {}):
++#        """Install packages into the install root.
++#
++#        This function installs the packages listed in the supplied kickstart
++#        into the install root. By default, the packages are installed from the
++#        repository URLs specified in the kickstart.
++#
++#        repo_urls -- a dict which maps a repository name to a repository URL;
++#                     if supplied, this causes any repository URLs specified in
++#                     the kickstart to be overridden.
++#
++#        """
++#        yum_conf = self._mktemp(prefix = "yum.conf-")
++#
++#        ayum = LiveCDYum(releasever=self.releasever, useplugins=self.useplugins)
++#        ayum.setup(yum_conf, self._instroot, cacheonly=self.cacheonly)
++#
++#        for repo in kickstart.get_repos(self.ks, repo_urls):
++#            (name, baseurl, mirrorlist, proxy, inc, exc, cost) = repo
++#
++#            yr = ayum.addRepository(name, baseurl, mirrorlist)
++#            if inc:
++#                yr.includepkgs = inc
++#            if exc:
++#                yr.exclude = exc
++#            if proxy:
++#                yr.proxy = proxy
++#            if cost is not None:
++#                yr.cost = cost
++#        ayum.setup(yum_conf, self._instroot)
++##
++#        if kickstart.exclude_docs(self.ks):
++#            rpm.addMacro("_excludedocs", "1")
++#        if not kickstart.selinux_enabled(self.ks):
++#            rpm.addMacro("__file_context_path", "%{nil}")
++#        if kickstart.inst_langs(self.ks) != None:
++#            rpm.addMacro("_install_langs", kickstart.inst_langs(self.ks))
++#
++#        try:
++#            self.__select_packages(ayum)
++#            self.__select_groups(ayum)
++#            self.__deselect_packages(ayum)
++#
++#            self.__can_handle_selinux(ayum)
++#
++#            ayum.runInstall()
++#        except yum.Errors.RepoError, e:
++#            raise CreatorError("Unable to download from repo : %s" % (e,))
++#        except yum.Errors.YumBaseError, e:
++#            raise CreatorError("Unable to install: %s" % (e,))
++#        finally:
++#            ayum.closeRpmDB()
++#            ayum.close()
++#            os.unlink(yum_conf)
+ 
+         # do some clean up to avoid lvm info leakage.  this sucks.
+-        for subdir in ("cache", "backup", "archive"):
+-            lvmdir = self._instroot + "/etc/lvm/" + subdir
+-            try:
+-                for f in os.listdir(lvmdir):
+-                    os.unlink(lvmdir + "/" + f)
+-            except:
+-                pass
++#        for subdir in ("cache", "backup", "archive"):
++#            lvmdir = self._instroot + "/etc/lvm/" + subdir
++#            try:
++#                for f in os.listdir(lvmdir):
++#                    os.unlink(lvmdir + "/" + f)
++#            except:
++#                pass
+ 
+     def _run_post_scripts(self):
+         for s in kickstart.get_post_scripts(self.ks):
+diff -Nur livecd-tools-18.8.orig/imgcreate/__init__.py livecd-tools-18.8/imgcreate/__init__.py
+--- livecd-tools-18.8.orig/imgcreate/__init__.py	2012-08-06 22:49:20.000000000 +0400
++++ livecd-tools-18.8/imgcreate/__init__.py	2012-10-02 12:31:28.000000000 +0400
+@@ -17,8 +17,9 @@
+ # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ 
+ from imgcreate.live import *
++#from imgcreate.arch import *
+ from imgcreate.creator import *
+-from imgcreate.yuminst import *
++#from imgcreate.yuminst import *
+ from imgcreate.kickstart import *
+ from imgcreate.fs import *
+ from imgcreate.debug import *
+diff -Nur livecd-tools-18.8.orig/imgcreate/live.py livecd-tools-18.8/imgcreate/live.py
+--- livecd-tools-18.8.orig/imgcreate/live.py	2012-10-02 11:47:06.000000000 +0400
++++ livecd-tools-18.8/imgcreate/live.py	2012-10-02 12:32:23.000000000 +0400
+@@ -1,4 +1,4 @@
+-#
++#	
+ # live.py : LiveImageCreator class for creating Live CD images
+ #
+ # Copyright 2007, Red Hat  Inc.
+@@ -24,6 +24,7 @@
+ import logging
+ import re
+ 
++from imgcreate.arch import *
+ from imgcreate.errors import *
+ from imgcreate.fs import *
+ from imgcreate.creator import *
+@@ -797,13 +798,13 @@
+         cfgf.close()
+ 
+         # first gen mactel machines get the bootloader name wrong apparently
+-        if rpmUtils.arch.getBaseArch() == "i386":
++        if getBaseArch() == "i386":
+             os.link(isodir + "/EFI/BOOT/grub.efi", isodir + "/EFI/BOOT/BOOT.efi")
+             os.link(isodir + "/EFI/BOOT/grub.conf", isodir + "/EFI/BOOT/BOOT.conf")
+ 
+         # for most things, we want them named boot$efiarch
+         efiarch = {"i386": "IA32", "x86_64": "X64"}
+-        efiname = efiarch[rpmUtils.arch.getBaseArch()]
++        efiname = efiarch[getBaseArch()]
+         os.rename(isodir + "/EFI/BOOT/grub.efi", isodir + "/EFI/BOOT/BOOT%s.efi" %(efiname,))
+         os.link(isodir + "/EFI/BOOT/grub.conf", isodir + "/EFI/BOOT/BOOT%s.conf" %(efiname,))
+ 
+@@ -1010,7 +1011,7 @@
+         return ["kernel.ppc"] + \
+                ppcLiveImageCreator._get_excluded_packages(self)
+ 
+-arch = rpmUtils.arch.getBaseArch()
++arch = getBaseArch()
+ if arch in ("i386", "x86_64"):
+     LiveImageCreator = x86LiveImageCreator
+ elif arch in ("ppc",):

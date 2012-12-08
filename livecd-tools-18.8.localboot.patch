@@ -1,0 +1,12 @@
+diff -Nur livecd-tools-18.8.orig/imgcreate/live.py livecd-tools-18.8/imgcreate/live.py
+--- livecd-tools-18.8.orig/imgcreate/live.py	2012-11-06 11:20:30.000000000 +0400
++++ livecd-tools-18.8/imgcreate/live.py	2012-11-06 11:21:23.000000000 +0400
+@@ -666,7 +666,7 @@
+     def __get_local_stanza(self, isodir):
+         return """label local
+   menu label Boot from local drive
+-  localboot 0xffff
++  localboot 0x80
+ """
+ 
+     def _configure_syslinux_bootloader(self, isodir):

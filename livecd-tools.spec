@@ -2,46 +2,45 @@
 
 %define debug_package %{nil}
 
-Summary: Tools for building live CDs
-Name: livecd-tools
-Version: 18.8
-Release: 16
-Epoch: 1
-License: GPLv2
-Group: System/Base
-URL: http://git.fedorahosted.org/git/livecd
+Summary:	Tools for building live CDs
+Name:		livecd-tools
+Version:	18.8
+Release:	17
+Epoch:		1
+License:	GPLv2
+Group:		System/Base
+URL:		http://git.fedorahosted.org/git/livecd
 # To make source tar ball:
 # git clone git://git.fedorahosted.org/livecd
 # cd livecd
 # make dist
 # scp livecd*.tar.bz2 fedorahosted.org:livecd
-Source0: http://fedorahosted.org/releases/l/i/livecd/%{name}-%{version}.tar.bz2
-Source1: arch.py
-Patch0: livecd-tools-18.8.urpmi.rosa.patch
-Patch1: livecd-tools-18.8.noyum.patch
-Patch2: livecd-tools-18.8.more.fixes.patch
-Patch3: livecd-tools-18.8.localboot.patch
-Patch4: livecd-tools-18.8.revert.patch
-Patch5: livecd-tools-18.8.sgb2.patch
-Patch6: livecd-tools-18.8.safemode.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-Requires: python-imgcreate = %{epoch}:%{version}-%{release}
-Requires: mkisofs
-Requires: isomd5sum
-Requires: parted
-Requires: pyparted
-Requires: util-linux
-Requires: dosfstools
-Requires: e2fsprogs
-Requires: lorax >= 18.3
-Obsoletes: livecd-iso-to-disk
+Source0:	http://fedorahosted.org/releases/l/i/livecd/%{name}-%{version}.tar.bz2
+Source1:	arch.py
+Patch0:		livecd-tools-18.8.urpmi.rosa.patch
+Patch1:		livecd-tools-18.8.noyum.patch
+Patch2:		livecd-tools-18.8.more.fixes.patch
+Patch3:		livecd-tools-18.8.localboot.patch
+Patch4:		livecd-tools-18.8.revert.patch
+Patch5:		livecd-tools-18.8.sgb2.patch
+Patch6:		livecd-tools-18.8.safemode.patch
+Requires:	python-imgcreate = %{EVRD}
+Requires:	mkisofs
+Requires:	isomd5sum
+Requires:	parted
+Requires:	pyparted
+Requires:	util-linux
+Requires:	dosfstools
+Requires:	e2fsprogs
+Requires:	lorax >= 18.3
+Obsoletes:	livecd-iso-to-disk
 
 %ifarch %{ix86} x86_64
-Requires: syslinux
+Requires:	syslinux
 %endif
-Requires: dumpet
-BuildRequires: python
-BuildRequires: /usr/bin/pod2man
+Requires:	dumpet
+BuildRequires:	python
+BuildRequires:	/usr/bin/pod2man
 
 
 %description 
@@ -50,18 +49,18 @@ derived distributions such as RHEL, CentOS and others. See
 http://fedoraproject.org/wiki/FedoraLiveCD for more details.
 
 %package -n python-imgcreate
-Summary: Python modules for building system images
-Group: System/Base
-Requires: util-linux
-Requires: coreutils
-Requires: e2fsprogs
-Requires: squashfs-tools
-Requires: pykickstart >= 0.96
-Requires: dosfstools >= 2.11-8
+Summary:	Python modules for building system images
+Group:		System/Base
+Requires:	util-linux
+Requires:	coreutils
+Requires:	e2fsprogs
+Requires:	squashfs-tools
+Requires:	pykickstart >= 0.96
+Requires:	dosfstools >= 2.11-8
 #Requires: system-config-keyboard >= 1.3.0
-Requires: python-urlgrabber
-Requires: python-selinux
-Requires: dbus-python
+Requires:	python-urlgrabber
+Requires:	python-selinux
+Requires:	python-dbus
 #Requires: policycoreutils
 
 %description -n python-imgcreate
@@ -83,12 +82,9 @@ like live image or appliances.
 make
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 %__install -m 0644 %{SOURCE1} %{buildroot}%{python_sitelib}/imgcreate/
 
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)

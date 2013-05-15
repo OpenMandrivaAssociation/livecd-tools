@@ -63,7 +63,7 @@ diff -Nur livecd-tools-18.8.orig/imgcreate/live.py livecd-tools-18.8/imgcreate/l
      def _get_required_packages(self):
 @@ -490,28 +494,26 @@
  menu background %(background)s
- menu autoboot Starting ROSA Desktop 2012 in # second{,s}. Press any key to interrupt.
+ menu autoboot Starting %(title)s in # second{,s}. Press any key to interrupt.
  
 -menu clear
 +#menu clear
@@ -107,21 +107,6 @@ diff -Nur livecd-tools-18.8.orig/imgcreate/live.py livecd-tools-18.8/imgcreate/l
  
  menu tabmsg Press Tab for full configuration options on menu items.
  menu separator
-@@ -567,11 +569,11 @@
-             default = self.__is_default_kernel(kernel, kernels)
- 
-             if default:
--                long = self.product
-+                long = "ROSA Desktop 2012"
-             elif kernel.startswith("kernel-"):
--                long = "%s (%s)" % (self.product, kernel[7:])
-+                long = "%s (%s)" % ("ROSA Desktop 2012", kernel[7:])
-             else:
--                long = "%s (%s)" % (self.product, kernel)
-+                long = "%s (%s)" % ("ROSA Desktop 2012", kernel)
- 
-             # tell dracut not to ask for LUKS passwords or activate mdraid sets
-             if isDracut:
 @@ -583,7 +585,7 @@
                                             fslabel = self.fslabel,
                                             isofstype = "auto",

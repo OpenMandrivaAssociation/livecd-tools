@@ -200,15 +200,6 @@ diff -Nur livecd-tools-18.8.orig/imgcreate/live.py livecd-tools-18.8/imgcreate/l
  
          is_xen = False
          if os.path.exists(bootdir + "/xen.gz-" + version[:-3]):
-@@ -486,7 +487,7 @@
- default %(menu)s
- timeout %(timeout)d
- menu background %(background)s
--menu autoboot Starting %(title)s in # second{,s}. Press any key to interrupt.
-+menu autoboot Starting ROSA Desktop 2012 in # second{,s}. Press any key to interrupt.
- 
- menu clear
- menu title %(title)s
 @@ -499,10 +500,10 @@
  
  menu color border * #00000000 #00000000 none

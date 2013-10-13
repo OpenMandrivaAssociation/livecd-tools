@@ -5,7 +5,7 @@
 Summary:	Tools for building live CDs
 Name:		livecd-tools
 Version:	18.8
-Release:	19
+Release:	20
 Epoch:		1
 License:	GPLv2
 Group:		System/Base
@@ -25,6 +25,7 @@ Patch4:		livecd-tools-18.8.revert.patch
 Patch5:		livecd-tools-18.8.sgb2.patch
 Patch6:		livecd-tools-18.8.safemode.patch
 Patch7:         livecd-tools-18.8.fs_nls.patch
+Patch8:		livecd-tools-18.8-no-vesafb.patch
 Requires:	python-imgcreate = %{EVRD}
 Requires:	mkisofs
 Requires:	isomd5sum
@@ -71,13 +72,8 @@ like live image or appliances.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
+%apply_patches
+find . -name "*~" |xargs rm
 
 %build
 make

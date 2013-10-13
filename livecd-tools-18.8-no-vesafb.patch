@@ -15,10 +15,10 @@
 +        r += " vga=0"
          if os.path.exists(self._instroot + "/usr/bin/rhgb"):
 -            r += " rhgb vga=788 splash=silent logo.nologo"
-+            r += " rhgb splash=silent logo.nologo"
++            r += " rhgb uvesafb.mode_option=1024x768-16 splash=silent logo.nologo"
          if os.path.exists(self._instroot + "/usr/bin/plymouth"):
 -            r += " rhgb vga=788 splash=silent logo.nologo"
-+            r += " rhgb splash=silent logo.nologo"
++            r += " rhgb uvesafb.mode_option=1024x768-16 splash=silent logo.nologo"
          return r
          
      def _get_mkisofs_options(self, isodir):

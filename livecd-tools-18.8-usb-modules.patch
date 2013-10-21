@@ -6,6 +6,7 @@
              if module == "=usb":
 -                retval = retval + "ehci_hcd uhci_hcd ohci_hcd "
 +                retval = retval + "xhci_hcd ehci_hcd ehci-pci ehci-platform uhci_hcd ohci_hcd "
-                 retval = retval + "usb_storage usbhid "
+-                retval = retval + "usb_storage usbhid "
++                retval = retval + "usb_storage evdev hid usbhid "
              elif module == "=firewire":
                  retval = retval + "firewire-sbp2 firewire-ohci "

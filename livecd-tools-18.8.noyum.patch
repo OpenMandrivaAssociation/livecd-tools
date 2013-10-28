@@ -21,7 +21,7 @@ diff -Nur livecd-tools-18.8.orig/imgcreate/creator.py livecd-tools-18.8/imgcreat
          self._mount_instroot(base_on)
  
 -        for d in ("/dev/pts", "/etc", "/boot", "/var/log", "/var/cache/yum", "/sys", "/proc"):
-+        for d in ("/dev/pts", "/etc", "/boot", "/var/log", "/var/cache/urpmi", "/sys", "/proc"):
++        for d in ("/dev/pts", "/etc", "/boot", "/var/log", "/var/cache/urpmi", "/var/cache/urpmi/partial", "/var/cache/urpmi/rpms", "/sys", "/proc"):
              makedirs(self._instroot + d)
  
 -        cachesrc = cachedir or (self.__builddir + "/yum-cache")

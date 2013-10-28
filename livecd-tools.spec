@@ -5,11 +5,11 @@
 Summary:	Tools for building live CDs
 Name:		livecd-tools
 Version:	18.8
-Release:	23
+Release:	24
 Epoch:		1
 License:	GPLv2
 Group:		System/Base
-URL:		http://git.fedorahosted.org/git/livecd
+URL:		https://git.fedorahosted.org/cgit/livecd/
 # To make source tar ball:
 # git clone git://git.fedorahosted.org/livecd
 # cd livecd
@@ -24,7 +24,7 @@ Patch3:		livecd-tools-18.8.localboot.patch
 Patch4:		livecd-tools-18.8.revert.patch
 Patch5:		livecd-tools-18.8.sgb2.patch
 Patch6:		livecd-tools-18.8.safemode.patch
-Patch7:         livecd-tools-18.8.fs_nls.patch
+Patch7:		livecd-tools-18.8.fs_nls.patch
 Patch8:		livecd-tools-18.8-no-vesafb.patch
 Patch9:		livecd-tools-18.8-usb-modules.patch
 Requires:	python-imgcreate = %{EVRD}
@@ -80,12 +80,11 @@ find . -name "*~" |xargs rm
 make
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT
-%__install -m 0644 %{SOURCE1} %{buildroot}%{python_sitelib}/imgcreate/
+%makeinstall_std
+install -m 0644 %{SOURCE1} %{buildroot}%{python_sitelib}/imgcreate/
 
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS COPYING README HACKING
 %doc config/livecd-fedora-minimal.ks
 %{_mandir}/man*/*
@@ -99,14 +98,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 /usr/share/doc/livecd-tools*
 
 %files -n python-imgcreate
-%defattr(-,root,root,-)
 %doc API COPYING
 %dir %{python_sitelib}/imgcreate
 %{python_sitelib}/imgcreate/*.py
 %{python_sitelib}/imgcreate/*.pyo
 %{python_sitelib}/imgcreate/*.pyc
 
-%changelog
-* Mon Aug 06 2012 Brian C. Lane <bcl@redhat.com> 18.8-1
-- Version 18.8 (bcl)
-- dracut needs to load vfat and msdos filesystems (bcl)

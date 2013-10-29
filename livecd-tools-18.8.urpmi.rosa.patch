@@ -27,7 +27,7 @@ diff -Nur livecd-tools-18.8.orig/imgcreate/creator.py livecd-tools-18.8/imgcreat
 +
 +        #for package in self.ks.handler.packages.packageList:
 +            #subprocess.call(["/usr/sbin/urpmi", "--auto", "--urpmi-root", urpmi_conf, "--root", self._instroot, package])
-+        subprocess.call(["/usr/sbin/urpmi", "--auto", "--no-suggests", "--no-verify", "--urpmi-root", urpmi_conf, "--root", self._instroot] + packages)
++        subprocess.call(["/usr/sbin/urpmi", "--auto", "--no-suggests", "--fastunsafe", "--no-verify", "--urpmi-root", urpmi_conf, "--root", self._instroot] + packages)
 +
 +
      def install(self, repo_urls = {}):

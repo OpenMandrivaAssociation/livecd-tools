@@ -128,7 +128,7 @@ diff -Nur livecd-tools-18.8.orig/imgcreate/creator.py livecd-tools-18.8/imgcreat
  
          urpmi_conf = self.__builddir + "/urpmi_conf"
 @@ -626,69 +626,69 @@
-         subprocess.call(["/usr/sbin/urpmi", "--auto", "--no-suggests", "--no-verify", "--urpmi-root", urpmi_conf, "--root", self._instroot] + packages)
+         subprocess.call(["/usr/sbin/urpmi", "--auto", "--no-suggests", "--fastunsafe", "--ignoresize", "--no-verify", "--urpmi-root", urpmi_conf, "--root", self._instroot] + packages)
  
  
 -    def install(self, repo_urls = {}):

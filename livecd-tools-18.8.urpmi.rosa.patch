@@ -177,7 +177,7 @@ diff -Nur livecd-tools-18.8.orig/imgcreate/live.py livecd-tools-18.8/imgcreate/l
  
          shutil.copyfile(bootdir + "/vmlinuz-" + version,
                          isodir + "/isolinux/vmlinuz" + index)
-+        subprocess.call(["/usr/sbin/dracut", "--mount 'tmpfs /var/tmp tmpfs'", "/boot/initramfs-" + version + ".img", version],
++        subprocess.call(["/usr/sbin/dracut", "--mount", "tmpfs /var/tmp tmpfs", "/boot/initramfs-" + version + ".img", version],
 +                        preexec_fn = self._chroot)
  
          isDracut = False
@@ -303,7 +303,7 @@ diff -Nur livecd-tools-18.8.orig/imgcreate/live.py livecd-tools-18.8/imgcreate/l
  
          shutil.copyfile(bootdir + "/vmlinuz-" + version,
                          destdir + "/vmlinuz")
-+        subprocess.call(["/usr/sbin/dracut", "--mount 'tmpfs /var/tmp tmpfs'", "/boot/initramfs-" + version + ".img", version],
++        subprocess.call(["/usr/sbin/dracut", "--mount", "tmpfs /var/tmp tmpfs", "/boot/initramfs-" + version + ".img", version],
 +                        preexec_fn = self._chroot)
  
          if os.path.exists(bootdir + "/initramfs-" + version + ".img"):

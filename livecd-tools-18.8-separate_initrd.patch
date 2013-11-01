@@ -5,14 +5,14 @@
          shutil.copyfile(bootdir + "/vmlinuz-" + version,
                          isodir + "/isolinux/vmlinuz" + index)
 -        subprocess.call(["/usr/sbin/dracut", "-f", "--mount", "tmpfs /var/tmp tmpfs", "-o", " aufs-mount bash rescue qemu multipath mdraid dmraid ", isodir + "/isolinux/initrd"+index+".img", version],
-+        subprocess.call(["/usr/sbin/dracut", "-f", "--mount", "tmpfs /var/tmp tmpfs", "-o", " aufs-mount bash rescue qemu multipath mdraid dmraid ", isodir + "/liveramfs-" + version + ".img", version],
++        subprocess.call(["/usr/sbin/dracut", "--mount", "tmpfs /var/tmp tmpfs", "-o", " aufs-mount bash rescue qemu multipath mdraid dmraid ", bootdir + "/liveramfs-" + version + ".img", version],
                          preexec_fn = self._chroot)
  
          isDracut = False
 -        if os.path.exists(bootdir + "/initramfs-" + version + ".img"):
 -            shutil.copyfile(bootdir + "/initramfs-" + version + ".img",
-+        if os.path.exists(isodir + "/liveramfs-" + version + ".img"):
-+            shutil.copyfile(isodir + "/liveramfs-" + version + ".img",
++        if os.path.exists(bootdir + "/liveramfs-" + version + ".img"):
++            shutil.copyfile(bootdir + "/liveramfs-" + version + ".img",
                              isodir + "/isolinux/initrd" + index + ".img")
              isDracut = True
          else:

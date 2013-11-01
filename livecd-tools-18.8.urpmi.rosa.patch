@@ -177,7 +177,7 @@ diff -Nur livecd-tools-18.8.orig/imgcreate/live.py livecd-tools-18.8/imgcreate/l
  
          shutil.copyfile(bootdir + "/vmlinuz-" + version,
                          isodir + "/isolinux/vmlinuz" + index)
-+        subprocess.call(["/usr/sbin/dracut", "--mount", "tmpfs /var/tmp tmpfs", "-o", " aufs-mount bash rescue qemu multipath mdraid dmraid ", isodir + "/isolinux/initrd"+index+".img", version],
++        subprocess.call(["/usr/sbin/dracut", "-f", "--mount", "tmpfs /var/tmp tmpfs", "-o", " aufs-mount bash rescue qemu multipath mdraid dmraid ", isodir + "/isolinux/initrd"+index+".img", version],
 +                        preexec_fn = self._chroot)
  
          isDracut = False

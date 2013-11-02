@@ -5,7 +5,7 @@
 Summary:	Tools for building live CDs
 Name:		livecd-tools
 Version:	18.8
-Release:	34
+Release:	35
 Epoch:		1
 License:	GPLv2
 Group:		System/Base
@@ -28,6 +28,7 @@ Patch7:		livecd-tools-18.8.fs_nls.patch
 Patch8:		livecd-tools-18.8-no-vesafb.patch
 Patch9:		livecd-tools-18.8-usb-modules.patch
 Patch10:	livecd-tools-18.8-separate_initrd.patch
+Patch11:	livecd-tools-18.8-handle-etc-vconsole.conf.patch
 Requires:	python-imgcreate = %{EVRD}
 Requires:	mkisofs
 Requires:	isomd5sum
@@ -104,4 +105,3 @@ install -m 0644 %{SOURCE1} %{buildroot}%{python_sitelib}/imgcreate/
 %{python_sitelib}/imgcreate/*.py
 %{python_sitelib}/imgcreate/*.pyo
 %{python_sitelib}/imgcreate/*.pyc
-

@@ -5,7 +5,7 @@
 Summary:	Tools for building live CDs
 Name:		livecd-tools
 Version:	18.8
-Release:	36
+Release:	37
 Epoch:		1
 License:	GPLv2
 Group:		System/Base
@@ -76,7 +76,6 @@ like live image or appliances.
 %prep
 %setup -q
 %apply_patches
-exit 1
 find . -name "*~" |xargs rm
 
 %build

@@ -131,7 +131,7 @@ diff -Nur livecd-tools-18.8.orig/imgcreate/live.py livecd-tools-18.8/imgcreate/l
      def _generate_efiboot(self, isodir):
          """Generate EFI boot images."""
 -        if not os.path.exists(self._instroot + "/boot/efi/EFI/redhat/grub.efi"):
-+        if not os.path.exists(self._instroot + "/boot/efi/EFI/rosa/grub.efi"):
++        if not os.path.exists(self._instroot + "/boot/efi/EFI/omdv/grub.efi") and not os.path.exists(self._instroot + "/boot/efi/EFI/rosa/grub.efi"):
              return False
          subprocess.call(["mkefiboot", isodir + "/EFI/BOOT",
                           isodir + "/isolinux/efiboot.img"])
@@ -287,15 +287,18 @@ diff -Nur livecd-tools-18.8.orig/imgcreate/live.py livecd-tools-18.8/imgcreate/l
  
          cfg += self.__get_memtest_stanza(isodir)
          cfg += "menu separator\n"
-@@ -691,9 +720,9 @@
+@@ -691,9 +720,12 @@
          cfgf.close()
  
      def __copy_efi_files(self, isodir):
 -        if not os.path.exists(self._instroot + "/boot/efi/EFI/redhat/grub.efi"):
-+        if not os.path.exists(self._instroot + "/boot/efi/EFI/rosa/grub.efi"):
++        if os.path.exists(self._instroot + "/boot/efi/EFI/omdv/grub.efi"):
++            shutil.copy(self._instroot + "/boot/efi/EFI/omdv/grub.efi",
++        elif os.path.exists(self._instroot + "/boot/efi/EFI/rosa/grub.efi"):
++            shutil.copy(self._instroot + "/boot/efi/EFI/rosa/grub.efi",
++        else:
              return False
 -        shutil.copy(self._instroot + "/boot/efi/EFI/redhat/grub.efi",
-+        shutil.copy(self._instroot + "/boot/efi/EFI/rosa/grub.efi",
                      isodir + "/EFI/BOOT/grub.efi")
  
          # Should exist, but if it doesn't we should fail

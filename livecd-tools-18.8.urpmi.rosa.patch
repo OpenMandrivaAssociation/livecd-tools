@@ -287,19 +287,21 @@ diff -Nur livecd-tools-18.8.orig/imgcreate/live.py livecd-tools-18.8/imgcreate/l
  
          cfg += self.__get_memtest_stanza(isodir)
          cfg += "menu separator\n"
-@@ -691,9 +720,12 @@
+@@ -691,9 +720,13 @@
          cfgf.close()
  
      def __copy_efi_files(self, isodir):
 -        if not os.path.exists(self._instroot + "/boot/efi/EFI/redhat/grub.efi"):
 +        if os.path.exists(self._instroot + "/boot/efi/EFI/omdv/grub.efi"):
 +            shutil.copy(self._instroot + "/boot/efi/EFI/omdv/grub.efi",
++                        isodir + "/EFI/BOOT/grub.efi")
 +        elif os.path.exists(self._instroot + "/boot/efi/EFI/rosa/grub.efi"):
 +            shutil.copy(self._instroot + "/boot/efi/EFI/rosa/grub.efi",
++                        isodir + "/EFI/BOOT/grub.efi")
 +        else:
              return False
 -        shutil.copy(self._instroot + "/boot/efi/EFI/redhat/grub.efi",
-                     isodir + "/EFI/BOOT/grub.efi")
+-                    isodir + "/EFI/BOOT/grub.efi")
  
          # Should exist, but if it doesn't we should fail
 @@ -829,14 +858,17 @@

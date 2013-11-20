@@ -5,7 +5,7 @@
 Summary:	Tools for building live CDs
 Name:		livecd-tools
 Version:	18.8
-Release:	38
+Release:	39
 Epoch:		1
 License:	GPLv2
 Group:		System/Base
@@ -29,6 +29,7 @@ Patch8:		livecd-tools-18.8-no-vesafb.patch
 Patch9:		livecd-tools-18.8-usb-modules.patch
 Patch10:	livecd-tools-18.8-separate_initrd.patch
 #Patch11:	livecd-tools-18.8-handle-etc-vconsole.conf.patch
+Patch12:	livecd-tools-18.8-default-to-install.patch
 Requires:	python-imgcreate = %{EVRD}
 Requires:	mkisofs
 Requires:	isomd5sum

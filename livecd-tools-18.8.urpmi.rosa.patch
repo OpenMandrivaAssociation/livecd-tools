@@ -304,7 +304,7 @@
  
          shutil.copyfile(bootdir + "/vmlinuz-" + version,
                          destdir + "/vmlinuz")
-+        subprocess.call(["/usr/sbin/dracut", "--mount", "tmpfs /var/tmp tmpfs", "/boot/initramfs-" + version + ".img", version],
++        subprocess.call(["/usr/sbin/dracut", "--mount", "tmpfs /var/tmp tmpfs defaults", "/boot/initramfs-" + version + ".img", version],
 +                        preexec_fn = self._chroot)
  
          if os.path.exists(bootdir + "/initramfs-" + version + ".img"):

@@ -1,11 +1,7 @@
---- livecd-tools-18.8/imgcreate/live.py.orig	2013-11-01 14:22:28.812563080 +0000
-+++ livecd-tools-18.8/imgcreate/live.py	2013-11-01 14:23:45.826567131 +0000
-@@ -454,12 +454,12 @@
- 
-         shutil.copyfile(bootdir + "/vmlinuz-" + version,
-                         isodir + "/isolinux/vmlinuz" + index)
--        subprocess.call(["/usr/sbin/dracut", "-f", "--mount", "tmpfs /var/tmp tmpfs defaults", "-o", " aufs-mount bash rescue qemu multipath mdraid dmraid ", isodir + "/isolinux/initrd"+index+".img", version],
-+        subprocess.call(["/usr/sbin/dracut", "--mount", "tmpfs /var/tmp tmpfs defaults 0 0", "-o", " aufs-mount bash rescue qemu multipath mdraid dmraid ", bootdir + "/liveramfs-" + version + ".img", version],
+diff -Naur livecd-tools-18.8/imgcreate/live.py livecd-tools-18.8.tpg/imgcreate/live.py
+--- livecd-tools-18.8/imgcreate/live.py	2014-03-16 16:36:04.000000000 +0000
++++ livecd-tools-18.8.tpg/imgcreate/live.py	2014-03-16 16:42:57.918007585 +0000
+@@ -458,8 +458,8 @@
                          preexec_fn = self._chroot)
  
          isDracut = False

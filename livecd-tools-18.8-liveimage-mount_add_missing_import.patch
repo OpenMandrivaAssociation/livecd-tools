@@ -1,0 +1,11 @@
+diff -Naur livecd-tools-18.8/tools/liveimage-mount livecd-tools-18.8.tpg/tools/liveimage-mount
+--- livecd-tools-18.8/tools/liveimage-mount	2012-08-06 18:49:20.000000000 +0000
++++ livecd-tools-18.8.tpg/tools/liveimage-mount	2014-03-28 20:49:22.962985153 +0000
+@@ -27,6 +27,7 @@
+ import tempfile
+ import subprocess
+ 
++from imgcreate.errors import *
+ 
+ def usage(ecode):
+     print """Usage:

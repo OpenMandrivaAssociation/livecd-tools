@@ -5,7 +5,7 @@
 Summary:	Tools for building live CDs
 Name:		livecd-tools
 Version:	18.8
-Release:	46
+Release:	47
 Epoch:		1
 License:	GPLv2
 Group:		System/Base
@@ -23,14 +23,15 @@ Patch2:		livecd-tools-18.8.more.fixes.patch
 Patch3:		livecd-tools-18.8.localboot.patch
 Patch4:		livecd-tools-18.8.revert.patch
 Patch5:		livecd-tools-18.8.sgb2.patch
-
 Patch6:		livecd-tools-18.8.safemode.patch
 Patch7:		livecd-tools-18.8.fs_nls.patch
 Patch8:		livecd-tools-18.8-no-vesafb.patch
 Patch9:		livecd-tools-18.8-usb-modules.patch
 Patch10:	livecd-tools-18.8-separate_initrd.patch
-#Patch11:	livecd-tools-18.8-handle-etc-vconsole.conf.patch
+Patch11:	livecd-tools-18.8-handle-etc-vconsole.conf.patch
 Patch12:	livecd-tools-18.8-default-to-install.patch
+Patch13:	livecd-tools-18.8-liveimage-mount_add_missing_import.patch
+
 Requires:	python-imgcreate = %{EVRD}
 Requires:	mkisofs
 Requires:	isomd5sum
@@ -50,7 +51,7 @@ BuildRequires:	python
 BuildRequires:	/usr/bin/pod2man
 
 
-%description 
+%description
 Tools for generating live CDs on Fedora based systems including
 derived distributions such as RHEL, CentOS and others. See
 http://fedoraproject.org/wiki/FedoraLiveCD for more details.

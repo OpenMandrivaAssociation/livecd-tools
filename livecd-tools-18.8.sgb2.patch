@@ -10,11 +10,13 @@ diff -Naur livecd-tools-18.8/imgcreate/live.py livecd-tools-18.8.tpg/imgcreate/l
                                             help = "Try this option out if you're having trouble starting.",
                                             index = index))
              linux.append(self.__get_image_stanza(is_xen, isDracut,
-@@ -669,6 +669,13 @@
+@@ -669,6 +669,15 @@
    localboot 0x80
  """
  
 +    def __get_grub2_stanza(self, isodir):
++        shutil.copyfile(self._instroot + "/isolinux/sgb.iso", isodir + "/isolinux/sgb.iso")
++        shutil.copyfile(self._instroot + "/isolinux/memdisk", isodir + "/isolinux/memdisk")
 +        return """label Rescue
 +  menu label Run super grub2 disk
 +  kernel memdisk

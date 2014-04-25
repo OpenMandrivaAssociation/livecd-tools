@@ -1,0 +1,12 @@
+diff -Naur livecd-tools-18.8/imgcreate/kickstart.py livecd-tools-18.8.tpg/imgcreate/kickstart.py
+--- livecd-tools-18.8/imgcreate/kickstart.py	2014-04-25 21:43:21.000000000 +0000
++++ livecd-tools-18.8.tpg/imgcreate/kickstart.py	2014-04-25 21:44:32.368890447 +0000
+@@ -494,7 +494,7 @@
+         return default
+     return int(ks.handler.bootloader.timeout)
+ 
+-def get_kernel_args(ks, default = "ro rd.live.image"):
++def get_kernel_args(ks, default = "ro rd.live.image quiet"):
+     if not hasattr(ks.handler.bootloader, "appendLine"):
+         return default
+     if ks.handler.bootloader.appendLine is None:

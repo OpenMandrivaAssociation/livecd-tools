@@ -5,7 +5,7 @@
 Summary:	Tools for building live CDs
 Name:		livecd-tools
 Version:	18.8
-Release:	50
+Release:	51
 Epoch:		1
 License:	GPLv2
 Group:		System/Base
@@ -50,7 +50,7 @@ Requires:	syslinux
 %endif
 Requires:	dumpet
 BuildRequires:	python
-BuildRequires:	/usr/bin/pod2man
+BuildRequires:	perl
 
 
 %description

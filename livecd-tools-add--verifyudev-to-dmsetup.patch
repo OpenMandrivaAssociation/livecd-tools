@@ -1,0 +1,12 @@
+diff -Naur livecd-tools-18.8-build/imgcreate/fs.py livecd-tools-18.8-build.tpg/imgcreate/fs.py
+--- livecd-tools-18.8-build/imgcreate/fs.py	2014-07-12 12:57:30.815547871 +0000
++++ livecd-tools-18.8-build.tpg/imgcreate/fs.py	2014-07-12 12:55:51.000000000 +0000
+@@ -559,7 +559,7 @@
+                                              self.imgloop.device,
+                                              self.cowloop.device)
+ 
+-        args = ["/sbin/dmsetup", "create", self.__name,
++        args = ["/sbin/dmsetup", "create", self.__name, "-vv", "--verifyudev",
+                 "--uuid", "LIVECD-%s" % self.__name, "--table", table]
+         if call(args) != 0:
+             self.cowloop.cleanup()

@@ -5,7 +5,7 @@
 Summary:	Tools for building live CDs
 Name:		livecd-tools
 Version:	18.8
-Release:	54
+Release:	55
 Epoch:		1
 License:	GPLv2
 Group:		System/Base
@@ -25,7 +25,8 @@ Patch4:		livecd-tools-18.8.revert.patch
 Patch5:		livecd-tools-18.8.sgb2.patch
 Patch6:		livecd-tools-18.8.safemode.patch
 Patch7:		livecd-tools-18.8.fs_nls.patch
-Patch8:		livecd-tools-18.8-no-vesafb.patch
+# (tpg) https://issues.openmandriva.org/show_bug.cgi?id=869
+Patch8:		livecd-tools-18.8-use-vga=current.patch
 Patch9:		livecd-tools-18.8-usb-modules.patch
 Patch10:	livecd-tools-18.8-separate_initrd.patch
 Patch11:	livecd-tools-18.8-handle-etc-vconsole.conf.patch

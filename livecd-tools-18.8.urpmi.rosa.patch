@@ -172,7 +172,7 @@
  
          shutil.copyfile(bootdir + "/vmlinuz-" + version,
                          isodir + "/isolinux/vmlinuz" + index)
-+        subprocess.call(["/usr/sbin/dracut", "-f", "--mount", "tmpfs /var/tmp tmpfs defaults 0 0", "-o", " aufs-mount bash rescue resume network lvm nfs ifcfg cifs multipath mdraid dmraid ",  isodir + "/isolinux/initrd"+index+".img", version],
++        subprocess.call(["/usr/sbin/dracut", "-f", "--lzo", "--mount", "tmpfs /var/tmp tmpfs defaults 0 0", "-o", " aufs-mount bash rescue resume network lvm nfs ifcfg cifs multipath mdraid dmraid ",  isodir + "/isolinux/initrd"+index+".img", version],
 +                        preexec_fn = self._chroot)
  
          isDracut = False
@@ -304,7 +304,7 @@
  
          shutil.copyfile(bootdir + "/vmlinuz-" + version,
                          destdir + "/vmlinuz")
-+        subprocess.call(["/usr/sbin/dracut", "--mount", "--lzo", "tmpfs /var/tmp tmpfs defaults 0 0", "-o", " aufs-mount bash rescue resume network lvm nfs ifcfg cifs multipath mdraid dmraid ", "/boot/initramfs-" + version + ".img", version],
++        subprocess.call(["/usr/sbin/dracut", "--lzo", "--mount", "tmpfs /var/tmp tmpfs defaults 0 0", "-o", " aufs-mount bash rescue resume network lvm nfs ifcfg cifs multipath mdraid dmraid ", "/boot/initramfs-" + version + ".img", version],
 +                        preexec_fn = self._chroot)
  
          if os.path.exists(bootdir + "/initramfs-" + version + ".img"):

@@ -107,7 +107,7 @@ install -m 0644 %{SOURCE1} %{buildroot}%{python_sitelib}/imgcreate/
 
 %files -n python-imgcreate
 %doc API COPYING
-%dir %{python_sitelib}/imgcreate
-%{python_sitelib}/imgcreate/*.py
-%{python_sitelib}/imgcreate/*.pyo
-%{python_sitelib}/imgcreate/*.pyc
+%dir %{python2_sitelib}/imgcreate
+%{python2_sitelib}/imgcreate/*.py
+%{python2_sitelib}/imgcreate/*.pyo
+%{python2_sitelib}/imgcreate/*.pyc

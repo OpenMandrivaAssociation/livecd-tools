@@ -34,6 +34,7 @@ Patch12:	livecd-tools-18.8-default-to-install.patch
 Patch13:	livecd-tools-18.8-liveimage-mount_add_missing_import.patch
 Patch14:	livecd-tools-18.8-enable-quite-boot.patch
 Patch15:	livecd-tools-add--verifyudev-to-dmsetup.patch
+Patch16:	livecd-tools-18.8-use-python2.patch
 
 Requires:	python-imgcreate = %{EVRD}
 Requires:	mkisofs
@@ -50,7 +51,7 @@ Obsoletes:	livecd-iso-to-disk
 Requires:	syslinux
 %endif
 Requires:	dumpet
-BuildRequires:	python
+BuildRequires:	pkgconfig(python2)
 BuildRequires:	perl
 
 
@@ -90,7 +91,6 @@ make
 %install
 %makeinstall_std
 install -m 0644 %{SOURCE1} %{buildroot}%{python_sitelib}/imgcreate/
-
 
 %files
 %doc AUTHORS COPYING README HACKING

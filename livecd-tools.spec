@@ -90,7 +90,7 @@ make
 
 %install
 %makeinstall_std
-install -m 0644 %{SOURCE1} %{buildroot}%{python_sitelib}/imgcreate/
+install -m 0644 %{SOURCE1} %{buildroot}%{python2_sitelib}/imgcreate/
 
 %files
 %doc AUTHORS COPYING README HACKING

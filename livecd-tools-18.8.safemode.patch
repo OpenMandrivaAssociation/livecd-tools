@@ -20,7 +20,7 @@ diff -Nur livecd-tools-18.8.old/imgcreate/live.py livecd-tools-18.8/imgcreate/li
 +#                                           liveargs = kern_opts,
 +#                                           long = "Start " + long + " in basic graphics mode.",
 +#                                           short = "basic" + index,
-+#                                           extra = "nomodeset",
++#                                           extra = "nomodeset plymouth.enable=0 vga=792",
 +#                                           help = "Try this option out if you're having trouble starting.",
 +#                                           index = index))
              linux.append(self.__get_image_stanza(is_xen, isDracut,
@@ -30,7 +30,7 @@ diff -Nur livecd-tools-18.8.old/imgcreate/live.py livecd-tools-18.8/imgcreate/li
                                             long = "Install " + long + " in basic graphics mode.",
                                             short = "basic" + index,
 -                                           extra = "xdriver=vesa nomodeset install",
-+                                           extra = "xdriver=vesa nokmsboot install",
++                                           extra = "xdriver=vesa nomodeset plymouth.enable=0 vga=792 install",
                                             help = "Try this option out if you're having trouble installing.",
                                             index = index))
              kern_opts = kernel_options

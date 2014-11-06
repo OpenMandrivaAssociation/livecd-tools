@@ -54,7 +54,6 @@ Requires:	dumpet
 BuildRequires:	pkgconfig(python2)
 BuildRequires:	perl
 
-
 %description
 Tools for generating live CDs on Fedora based systems including
 derived distributions such as RHEL, CentOS and others. See

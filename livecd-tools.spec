@@ -5,7 +5,7 @@
 Summary:	Tools for building live CDs
 Name:		livecd-tools
 Version:	18.8
-Release:	60
+Release:	61
 Epoch:		1
 License:	GPLv2
 Group:		System/Base
@@ -73,6 +73,7 @@ Requires:	python-urlgrabber
 Requires:	python-selinux
 Requires:	python-dbus
 #Requires: policycoreutils
+Requires:	timezone
 
 %description -n python-imgcreate
 Python modules that can be used for building images for things

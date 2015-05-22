@@ -1,0 +1,29 @@
+--- livecd-tools-18.8/imgcreate/live.py	2014-11-02 23:21:34.000000000 +0000
++++ cc/livecd-tools-18.8/imgcreate/live.py	2014-11-05 00:54:47.614213861 +0000
+@@ -746,8 +746,8 @@
+             return False
+ 
+         # Should exist, but if it doesn't we should fail
+-        if os.path.exists(self._instroot + "/boot/grub/splash.xpm.gz"):
+-            shutil.copy(self._instroot + "/boot/grub/splash.xpm.gz",
++        if os.path.exists(self._instroot + "/boot/grub2/splash.xpm.gz"):
++            shutil.copy(self._instroot + "/boot/grub2/splash.xpm.gz",
+                         isodir + "/EFI/BOOT/splash.xpm.gz")
+ 
+         return True
+@@ -755,7 +755,6 @@
+     def __get_basic_efi_config(self, **args):
+         return """
+ default=0
+-splashimage=/EFI/BOOT/splash.xpm.gz
+ timeout %(timeout)d
+ hiddenmenu
+ 
+@@ -767,7 +766,6 @@
+         else:
+             args["rootlabel"] = "CDLABEL=%(fslabel)s" % args
+         return """title %(long)s
+-  findiso
+   kernel /isolinux/vmlinuz%(index)s root=%(rootlabel)s rootfstype=%(isofstype)s %(liveargs)s %(extra)s
+   initrd /isolinux/initrd%(index)s.img
+ """ %args

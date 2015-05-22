@@ -1,0 +1,34 @@
+--- livecd-tools-18.8/imgcreate/live.py~	2014-12-18 13:52:56.900969989 +0000
++++ livecd-tools-18.8/imgcreate/live.py	2014-12-19 15:16:20.000000000 +0000
+@@ -745,6 +745,31 @@
+         else:
+             return False
+ 
++        fail = False
++        missing = []
++        files = [("/boot/grub2/fonts/dejavu_sans_bold_14.pf2", "/EFI/BOOT/fonts/"),
++                 ("/boot/grub2/fonts/dejavu_sans_mono_11.pf2", "/EFI/BOOT/fonts/"),
++                 ("/boot/grub2/fonts/terminal_font_11.pf2", "/EFI/BOOT/fonts/"),
++                ]
++        makedirs(isodir+"/EFI/BOOT/fonts/")
++        for src, dest in files:
++            src_glob = glob.glob(self._instroot+src)
++            if not src_glob:
++                missing.append("Missing EFI file (%s)" % (src,))
++                #fail = True
++            else:
++                shutil.copy(src_glob[0], isodir+dest)
++                fail = True
++        map(logging.error, missing)
++        #return fail
++
++        dir_files = [("/boot/grub2/themes/", "/EFI/BOOT/themes/"),
++        #             ("/boot/grub2/locale/", "/EFI/BOOT/locale/"),
++                    ]
++        for src, dest in dir_files:
++                shutil.copytree(self._instroot + src, isodir + dest)
++        return fail
++
+         # Should exist, but if it doesn't we should fail
+         if os.path.exists(self._instroot + "/boot/grub2/splash.xpm.gz"):
+             shutil.copy(self._instroot + "/boot/grub2/splash.xpm.gz",

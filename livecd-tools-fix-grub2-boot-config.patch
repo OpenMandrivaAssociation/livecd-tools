@@ -1,0 +1,31 @@
+--- livecd-tools-18.8/imgcreate/live.py~	2014-11-07 21:28:18.002523931 +0000
++++ livecd-tools-18.8/imgcreate/live.py	2014-11-07 18:13:50.000000000 +0000
+@@ -757,7 +757,28 @@
+ default=0
+ timeout %(timeout)d
+ hiddenmenu
++set default="0"
+ 
++function load_video {
++  insmod efi_gop
++  insmod efi_uga
++  insmod video_bochs
++  insmod video_cirrus
++  insmod all_video
++}
++
++load_video
++set gfxpayload=keep
++insmod gzio
++insmod part_gpt
++insmod ext2
++
++set timeout=%(timeout)d
++### END /etc/grub.d/00_header ###
++
++search --no-floppy --set=root -l '%(isolabel)s'
++
++### BEGIN /etc/grub.d/10_linux ###
+ """ %args
+ 
+     def __get_efi_image_stanza(self, **args):

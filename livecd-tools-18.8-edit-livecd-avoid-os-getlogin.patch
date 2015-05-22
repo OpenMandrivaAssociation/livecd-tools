@@ -1,0 +1,20 @@
+--- livecd-tools-18.8/tools/edit-livecd~	2012-08-06 19:49:20.000000000 +0100
++++ livecd-tools-18.8/tools/edit-livecd	2014-11-24 15:07:41.884090982 +0000
+@@ -76,7 +76,7 @@
+         self._include = None
+         """A string of file or directory paths to include in __copy_img_root."""
+ 
+-        self._builder = os.getlogin()
++        self._builder = default=os.popen("whoami").read()
+         """The name of the Remix builder for _branding.
+         Default = os.getlogin()"""
+ 
+@@ -593,7 +593,7 @@
+                       help="Specify release file/s for branding.")
+ 
+     parser.add_option("-b", "--builder", type="string",
+-                      dest="builder", default=os.getlogin(),
++                      dest="builder", default=os.popen("whoami").read(),
+                       help="Specify the builder of a Remix.")
+ 
+     parser.add_option("", "--clone", action="store_true", dest="clone",

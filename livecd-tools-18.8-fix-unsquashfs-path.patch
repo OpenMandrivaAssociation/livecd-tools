@@ -1,0 +1,11 @@
+--- livecd-tools-18.8/imgcreate/fs.py~	2012-08-06 19:49:20.000000000 +0100
++++ livecd-tools-18.8/imgcreate/fs.py	2014-11-25 00:51:38.136351076 +0000
+@@ -48,7 +48,7 @@
+ 
+     env = os.environ.copy()
+     env['LC_ALL'] = 'C'
+-    args = ['/usr/sbin/unsquashfs', '-s', sqfs_img]
++    args = ['/usr/bin/unsquashfs', '-s', sqfs_img]
+     try:
+         p = subprocess.Popen(args, stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE, env=env)

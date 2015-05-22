@@ -5,7 +5,7 @@
 Summary:	Tools for building live CDs
 Name:		livecd-tools
 Version:	18.8
-Release:	59
+Release:	60
 Epoch:		1
 License:	GPLv2
 Group:		System/Base
@@ -34,6 +34,15 @@ Patch12:	livecd-tools-18.8-default-to-install.patch
 Patch13:	livecd-tools-18.8-liveimage-mount_add_missing_import.patch
 Patch14:	livecd-tools-18.8-enable-quite-boot.patch
 Patch15:	livecd-tools-add--verifyudev-to-dmsetup.patch
+Patch16:	livecd-tools-update-to-grub2.patch
+Patch17:	livecd-tools-fix-grub2-boot-config.patch
+Patch18:	livecd-tools-grub2-fix-isolabel.patch
+Patch19:	livecd-tools-fixup-edit-livecd.patch
+Patch20:	livecd-tools-18.8-fix-unsquashfs-path.patch
+Patch21:	livecd-tool-copy-efi-support-files.patch
+Patch22:	livecd-tools-create-full-EFI-grub-cfg.patch
+Patch23:	livecd-tools-proc-fix-edit-livecd.patch
+Patch24:	livecd-tools-hard-code-menu-entry-temp.patch
 
 Requires:	python-imgcreate = %{EVRD}
 Requires:	mkisofs
@@ -50,7 +59,7 @@ Obsoletes:	livecd-iso-to-disk
 Requires:	syslinux
 %endif
 Requires:	dumpet
-BuildRequires:	python
+BuildRequires:	pkgconfig(python2)
 BuildRequires:	perl
 
 
@@ -73,6 +82,7 @@ Requires:	python-urlgrabber
 Requires:	python-selinux
 Requires:	python-dbus
 #Requires: policycoreutils
+
 
 %description -n python-imgcreate
 Python modules that can be used for building images for things

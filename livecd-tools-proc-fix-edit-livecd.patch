@@ -1,0 +1,11 @@
+--- livecd-tools-18.8/tools/edit-livecd~	2014-12-15 20:35:33.742095139 +0000
++++ livecd-tools-18.8/tools/edit-livecd	2014-12-15 20:57:42.735142937 +0000
+@@ -248,7 +248,7 @@
+ 
+         self._do_bindmounts()
+ 
+-        os.symlink("../proc/mounts", self._instroot + "/etc/mtab")
++#        os.symlink("../proc/mounts", self._instroot + "/etc/mtab")
+ 
+         self.__copy_img_root(base_on)
+         self._brand(self._builder)

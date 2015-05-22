@@ -1,0 +1,72 @@
+--- livecd-tools-18.8/imgcreate/live.py~	2014-11-27 17:13:10.000000000 +0000
++++ livecd-tools-18.8/imgcreate/live.py	2014-12-15 19:17:29.740926677 +0000
+@@ -771,25 +777,34 @@
+ 
+     def __get_basic_efi_config(self, **args):
+         return """
+-
+-function load_video {
++  insmod all_video
+   insmod efi_gop
+   insmod efi_uga
+   insmod video_bochs
+   insmod video_cirrus
+-  insmod all_video
+-}
+ 
+-load_video
+-set gfxpayload=keep
+-insmod gzio
+-insmod part_gpt
+-insmod ext2
++  set gfxmode=1680x1050,1360x768,1280x800,1024x768,1024x600,800x600,640x480
++  insmod gfxterm
++  insmod gzio
++  insmod part_gpt
++  insmod ext2
+ 
+ set timeout=%(timeout)d
+ ### END /etc/grub.d/00_header ###
+ 
+ search --no-floppy --set=root -l '%(isolabel)s'
++  set locale_dir=($root)/EFI/BOOT/locale
++  set lang=en_GB
++  insmod gettext
++  terminal_output gfxterm
++  insmod gfxmenu
++  loadfont ($root)/EFI/BOOT/fonts/dejavu_sans_bold_14.pf2
++  loadfont ($root)/EFI/BOOT/fonts/dejavu_sans_mono_11.pf2
++  loadfont ($root)/EFI/BOOT/fonts/OpenMandriva/terminal_font_11.pf2
++  insmod png
++  set theme=($root)/EFI/BOOT/themes/OpenMandriva/theme.txt
++  export theme
++  background_image -m stretch ($root)/EFI/BOOT/themes/OpenMandriva/terminal_background.png
+ 
+ ### BEGIN /etc/grub.d/10_linux ###
+ """ %args
+@@ -799,10 +814,22 @@
+             args["rootlabel"] = "live:LABEL=%(fslabel)s" % args
+         else:
+             args["rootlabel"] = "CDLABEL=%(fslabel)s" % args
+-        return """echo %(long)s
+-  linux /isolinux/vmlinuz%(index)s root=%(rootlabel)s rootfstype=%(isofstype)s %(liveargs)s %(extra)s
++        return """menuentry 'Start  %(long)s' --id 'linux0' {
++  linux /isolinux/vmlinuz%(index)s root=%(rootlabel)s rootfstype=%(isofstype)s %(liveargs)s %(extra)s rd.luks=0 rd.md=0 rd.dm=0
++  initrd /isolinux/initrd%(index)s.img
++  }
++  menuentry 'Install %(long)s' --id 'linux0' {
++  linux /isolinux/vmlinuz%(index)s root=%(rootlabel)s rootfstype=%(isofstype)s %(liveargs)s %(extra)s install
++  initrd /isolinux/initrd%(index)s.img
++  }
++  menuentry 'Install %(long)s in basic graphics mode' --id 'basic0' {
++  linux /isolinux/vmlinuz%(index)s root=%(rootlabel)s rootfstype=%(isofstype)s %(liveargs)s %(extra)s install
+   initrd /isolinux/initrd%(index)s.img
+-  boot
++  }
++  menuentry 'Boot from local drive' --id 'local' {
++  root=hd1,gpt1;
++  chainloader /efi/openmandriva/grubx64.efi;
++  }
+ """ %args
+ 
+     def __get_efi_image_stanzas(self, isodir, name):

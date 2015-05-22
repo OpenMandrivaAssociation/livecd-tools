@@ -1,0 +1,15 @@
+--- livecd-tools-18.8/imgcreate/live.py~	2014-12-15 20:35:33.753095139 +0000
++++ livecd-tools-18.8/imgcreate/live.py	2014-12-17 23:55:05.548011012 +0000
+@@ -763,10 +763,10 @@
+         return fail
+ 
+         dir_files = [("/boot/grub2/themes/", "/EFI/BOOT/themes/"),
+-                     ("/boot/grub2/locale/", "/EFI/BOOT/locale/"),
++        #             ("/boot/grub2/locale/", "/EFI/BOOT/locale/"),
+                    ]
+         for srcd, destd in dir_files:
+-                shutil.copytree(srcd, destd)
++                shutil.copytree(self._instroot+srcd, isodir+destd)
+ 
+         # Should exist, but if it doesn't we should fail
+         if os.path.exists(self._instroot + "/boot/grub2/splash.xpm.gz"):

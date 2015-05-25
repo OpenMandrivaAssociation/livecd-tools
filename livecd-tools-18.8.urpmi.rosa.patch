@@ -126,7 +126,7 @@
      def _generate_efiboot(self, isodir):
          """Generate EFI boot images."""
 -        if not os.path.exists(self._instroot + "/boot/efi/EFI/redhat/grub.efi"):
-+        if not os.path.exists(self._instroot + "/boot/efi/EFI/omdv/grub.efi") and not os.path.exists(self._instroot + "/boot/efi/EFI/rosa/grub.efi"):
++        if not os.path.exists(self._instroot + "/boot/efi/EFI/openmandriva/grub.efi") and not os.path.exists(self._instroot + "/boot/efi/EFI/rosa/grub.efi"):
              return False
          subprocess.call(["mkefiboot", isodir + "/EFI/BOOT",
                           isodir + "/isolinux/efiboot.img"])
@@ -287,8 +287,8 @@
  
      def __copy_efi_files(self, isodir):
 -        if not os.path.exists(self._instroot + "/boot/efi/EFI/redhat/grub.efi"):
-+        if os.path.exists(self._instroot + "/boot/efi/EFI/omdv/grub.efi"):
-+            shutil.copy(self._instroot + "/boot/efi/EFI/omdv/grub.efi",
++        if os.path.exists(self._instroot + "/boot/efi/EFI/openmandriva/grub.efi"):
++            shutil.copy(self._instroot + "/boot/efi/EFI/openmandriva/grub.efi",
 +                        isodir + "/EFI/BOOT/grub.efi")
 +        elif os.path.exists(self._instroot + "/boot/efi/EFI/rosa/grub.efi"):
 +            shutil.copy(self._instroot + "/boot/efi/EFI/rosa/grub.efi",

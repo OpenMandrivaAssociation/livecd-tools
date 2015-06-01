@@ -50,7 +50,7 @@
              args["rootlabel"] = "CDLABEL=%(fslabel)s" % args
 -        return """echo %(long)s
 -  linux /isolinux/vmlinuz%(index)s root=%(rootlabel)s rootfstype=%(isofstype)s %(liveargs)s %(extra)s
-+        return """menuentry 'Start  %(long)s' --id 'linux0' {
++        return """menuentry 'Start %(long)s' --id 'linux0' {
 +  linux /isolinux/vmlinuz%(index)s root=%(rootlabel)s rootfstype=%(isofstype)s %(liveargs)s %(extra)s rd.luks=0 rd.md=0 rd.dm=0
 +  initrd /isolinux/initrd%(index)s.img
 +  }

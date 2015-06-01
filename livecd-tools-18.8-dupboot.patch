@@ -1,0 +1,26 @@
+--- livecd-tools-18.8/imgcreate/live.py.orig	2015-06-01 23:37:19.548027288 +0100
++++ livecd-tools-18.8/imgcreate/live.py	2015-06-01 23:41:29.024011335 +0100
+@@ -828,10 +828,6 @@
+   linux /isolinux/vmlinuz%(index)s root=%(rootlabel)s rootfstype=%(isofstype)s %(liveargs)s %(extra)s install
+   initrd /isolinux/initrd%(index)s.img
+   }
+-  menuentry 'Boot from local drive' --id 'local' {
+-  root=hd1,gpt1;
+-  chainloader /efi/openmandriva/grubx64.efi;
+-  }
+ """ %args
+ 
+     def __get_efi_image_stanzas(self, isodir, name):
+@@ -858,6 +854,12 @@
+                                                    long = "Verify and Boot " + name,
+                                                    extra = "rd.live.check",
+                                                    index = index)
++	    cfg += """  menuentry 'Boot from local drive' --id 'local' {
++   root=hd1,gpt1;
++   chainloader /efi/openmandriva/grubx64.efi;
++   }
++"""
++
+             break
+ 
+         return cfg

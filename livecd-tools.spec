@@ -5,7 +5,7 @@
 Summary:	Tools for building live CDs
 Name:		livecd-tools
 Version:	18.8
-Release:	62
+Release:	63
 Epoch:		1
 License:	GPLv2
 Group:		System/Base
@@ -42,6 +42,7 @@ Patch20:	livecd-tools-18.8-fix-unsquashfs-path.patch
 Patch21:	livecd-tool-copy-efi-support-files.patch
 Patch22:	livecd-tools-create-full-EFI-grub-cfg.patch
 Patch23:	livecd-tools-proc-fix-edit-livecd.patch
+Patch24:	livecd-tools-18.8-dupboot.patch
 
 Requires:	python-imgcreate = %{EVRD}
 Requires:	mkisofs

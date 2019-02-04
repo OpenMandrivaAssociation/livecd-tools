@@ -9,7 +9,7 @@
 Name:          livecd-tools
 Summary:       Tools for building live CDs
 Version:       26.0
-Release:       1
+Release:       2
 License:       GPLv2
 Group:         System/Base
 URL:           https://github.com/livecd-tools/livecd-tools
@@ -56,7 +56,7 @@ Requires:      e2fsprogs
 #Requires:      lorax >= 18.3
 Requires:      rsync
 %ifarch %{ix86} %{x86_64} ppc ppc64
-Requires:      hfsplus-tools
+Recommends:    hfsplus-tools
 %endif
 %ifarch %{ix86} %{x86_64}
 Requires:      syslinux
@@ -65,7 +65,7 @@ Requires:      syslinux
 Requires:      yaboot
 %endif
 Requires:      dumpet
-Requires:      sssd-client
+Recommends:    sssd-client
 Requires:      cryptsetup
 Requires:      squashfs-tools
 #Requires:      policycoreutils

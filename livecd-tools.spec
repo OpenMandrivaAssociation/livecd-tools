@@ -40,7 +40,7 @@ derived distributions such as RHEL, CentOS and others. See
 http://fedoraproject.org/wiki/FedoraLiveCD for more details.
 
 This package is patched to support building live images on
-Mageia systems.
+OpenMandriva systems.
 
 %package -n python-imgcreate-sysdeps
 Summary:       Common system dependencies for python-imgcreate

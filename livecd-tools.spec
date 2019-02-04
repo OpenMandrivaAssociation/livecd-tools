@@ -26,6 +26,7 @@ Patch1004:     1004-livecd-tools-24-disable-efi.patch
 
 BuildRequires: python-devel
 BuildRequires: %{_bindir}/pod2man
+BuildRequires: /bin/sed
 
 Requires:      python-imgcreate%{?_isa} = %{version}-%{release}
 
@@ -112,7 +113,7 @@ Tools for installing Live CD ISOs to different mediums
 
 
 %install
-%make_install PYTHON=python3
+%make_install PYTHON=python3 SED_PROGRAM=/bin/sed
 
 # Delete installed docs, we'll grab them later
 rm -rf %{buildroot}%{_datadir}/doc/%{name}

@@ -9,7 +9,7 @@
 Name:          livecd-tools
 Summary:       Tools for building live CDs
 Version:       26.0
-Release:       2
+Release:       3
 License:       GPLv2
 Group:         System/Base
 URL:           https://github.com/livecd-tools/livecd-tools

@@ -8,21 +8,14 @@
 
 Name:          livecd-tools
 Summary:       Tools for building live CDs
-Version:       26.0
-Release:       3
+Version:       27.1
+Release:       1
 License:       GPLv2
 Group:         System/Base
 URL:           https://github.com/livecd-tools/livecd-tools
 Source0:       https://releases.pagure.org/%{name}/%{name}-%{version}.tar.gz
 
 # Patches backported from upstream
-
-# Mageia specific patches
-Patch1001:     1001-livecd-tools-18-dracut_conf.patch
-Patch1002:     1002-livecd-tools-18-force-dracut-also-for-initrd.patch
-Patch1003:     1003-livecd-tools-24-extra_filesystems.patch
-Patch1004:     1004-livecd-tools-24-disable-efi.patch
-
 
 BuildRequires: python-devel
 BuildRequires: %{_bindir}/pod2man
@@ -52,8 +45,7 @@ Requires:      parted
 Requires:      util-linux
 Requires:      dosfstools
 Requires:      e2fsprogs
-# mkefiboot from lorax, disabled by patch1004
-#Requires:      lorax >= 18.3
+Requires:      mkefiboot
 Requires:      rsync
 %ifarch %{ix86} %{x86_64} ppc ppc64
 Recommends:    hfsplus-tools

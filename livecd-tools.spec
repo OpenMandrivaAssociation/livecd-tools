@@ -8,7 +8,7 @@
 
 Name:          livecd-tools
 Summary:       Tools for building live CDs
-Version:       27.1
+Version:       28.3
 Release:       1
 License:       GPLv2
 Group:         System/Base
